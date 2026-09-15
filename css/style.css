@@ -395,7 +395,19 @@ p{ margin: 0 0 .8em; }
 .avatar-photo{ border:1.5px solid var(--border); background: var(--surface-2); }
 .avatar-initials{ border:1.5px solid currentColor; background: color-mix(in srgb, currentColor 14%, var(--surface)); }
 .speaker-cell{ display:inline-flex; align-items:center; gap:8px; }
+.agenda-role{ font-size:.76rem; color: var(--text-muted); margin-top:2px; }
 .stat-card .confidence-tag{ margin-top:8px; }
+
+/* ============================================================
+   Subsection dividers (merged accordion bodies, e.g. "Resultados"
+   containing Diagnóstico causal + Ejes temáticos + Cifras clave)
+   ============================================================ */
+.subsection-title{
+  font-size: 1.05rem; color: var(--primary-2); margin: 34px 0 4px;
+  padding-top: 22px; border-top: 1px solid var(--border);
+}
+.acc-body > .subsection-title:first-child{ margin-top:0; padding-top:0; border-top:none; }
+.subsection-subtitle{ font-size:.84rem; color: var(--text-muted); margin-bottom: 14px; }
 
 /* ============================================================
    Mind map (nota técnica IPS → EPS)

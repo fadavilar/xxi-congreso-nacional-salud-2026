@@ -40,6 +40,8 @@ const DATA = {
 
   intro: "El 10 y 11 de septiembre de 2026, el Grand Hyatt de Bogotá reunió a más de 1.200 líderes del sector —aseguradores, prestadores, entes de control, academia e industria— en la vigésimo primera edición del Congreso Nacional de Salud, organizado por Consultorsalud bajo el liderazgo de su CEO, Carlos Felipe Muñoz. Dos días, veintidós conferencias y un mismo hilo conductor: el sistema colombiano llega a 2026–2030 con coberturas altas en el papel, pero con una brecha financiera y territorial que ya no admite parches.",
 
+  introduction: "Este documento sintetiza el XXI Congreso Nacional de Salud 2026 pensando en dos tipos de lector: quien no asistió y quiere un resumen ordenado de lo que se dijo, y quien sí asistió y busca una lectura más estructurada, con valor adicional al que ya vivió en el escenario. Por eso no sigue el orden de la agenda del congreso, sino la estructura de un documento de síntesis: resumen, introducción, materiales y métodos (las 22 sesiones y cómo se construyó esta síntesis), resultados (el diagnóstico causal, los hallazgos por eje temático y las cifras clave), discusión y recomendaciones (incluida una nota técnica práctica con herramientas descargables para prestadores) y conclusión.",
+
   selectiveCategory: {
     title: "Un mismo punto de llegada: costos reales y evidencia, no inercias históricas",
     text: "Casi todas las conversaciones del congreso —tarifas, UPC, compra de medicamentos, evaluación de tecnologías, inteligencia artificial— terminaron en el mismo punto: la necesidad de decisiones basadas en costos reales y evidencia, no en inercias históricas. Si 2026–2027 es el momento en que se redefinen esas reglas, quienes trabajan en la intersección entre industria, evidencia y sistema de salud tienen mucho que aportar a esa conversación."
@@ -57,9 +59,9 @@ const DATA = {
     citation: "Diagramación siguiendo a Homer, J. B., & Hirsch, G. B. (2006). System dynamics modeling for public health. American Journal of Public Health, 96(3), 452–458. Construido a partir de las cifras y afirmaciones declaradas en el congreso (ver sesiones citadas en cada nodo), no de un modelo estadístico ajustado.",
     nodes: [
       { id: 1, label: "Déficit fiscal y estructural del sistema", actors: "Fedesarrollo · MinHacienda", sessions: [1, 15], confidence: "escenario" },
-      { id: 2, label: "Flujo oportuno de recursos hacia prestadores", actors: "ADRES", sessions: [8, 21], confidence: "escenario" },
+      { id: 2, label: "Flujo oportuno de recursos hacia prestadores", actors: "ADRES", sessions: [8, 20], confidence: "escenario" },
       { id: 3, label: "Cartera y mora con prestadores", actors: "IPS · Nueva EPS", sessions: [8, 13], confidence: "escenario" },
-      { id: 4, label: "Riesgo de cierre de servicios", actors: "Prestadores / IPS", sessions: [13, 17], confidence: "escenario" },
+      { id: 4, label: "Riesgo de cierre de servicios", actors: "Prestadores / IPS", sessions: [13, 21], confidence: "escenario" },
       { id: 5, label: "Intervención y vigilancia especial de EPS", actors: "Supersalud · Procuraduría", sessions: [13, 16], confidence: "escenario" },
       { id: 6, label: "Confianza de prestadores e inversionistas", actors: "Mercado del sector salud", sessions: [], confidence: "nota-autor" },
     ],
@@ -106,7 +108,7 @@ const DATA = {
         { text: "Simón Guzmán presentó la auditoría forense de la UPC como mecanismo de detección de riesgos y recuperación de recursos.", studies: [11] },
         { text: "El agente interventor de Nueva EPS, Roberto Solano, reportó que de más de 3.800 prestadores, cerca de 600 operan sin contrato formal; el lineamiento de pago se fijó en máximo 80% para lo público y 70% para lo privado, con excepciones por riesgo de cierre de servicios.", studies: [13] },
         { text: "La procuradora delegada para Asuntos de la Salud, Mónica Andrea Ulloa, reportó cerca de 23 billones de pesos en radicaciones y facturas sin resolver bajo vigilancia especial.", studies: [16] },
-        { text: "ADRES (Iván Sánchez Arango) planteó la hoja de ruta 2026–2030 hacia un flujo con trazabilidad total —\"cada peso con huella digital\"— y mecanismos de detección de riesgo antes del pago, no después.", studies: [21] },
+        { text: "ADRES (Iván Sánchez Arango) planteó la hoja de ruta 2026–2030 hacia un flujo con trazabilidad total —\"cada peso con huella digital\"— y mecanismos de detección de riesgo antes del pago, no después.", studies: [20] },
       ]
     },
     {
@@ -117,7 +119,7 @@ const DATA = {
         { text: "Julio César Benedetti: Colombia no tiene un manual tarifario único, obligatorio y actualizado. El tarifario SOAT vigente cubre 3.281 códigos frente a los 10.024 procedimientos de la Clasificación Única de Procedimientos en Salud (Resolución 2706 de 2025); el ISS 2001, la otra referencia histórica, no se actualiza desde su creación.", studies: [14] },
         { text: "La Circular 022 de 2026 regula precios de 705 principios activos, con un ajuste generalizado de -7% frente a la circular anterior y sanciones severas para quien no la aplique.", studies: [14] },
         { text: "Conclusión de Benedetti: la contratación del futuro debe construirse sobre costos reales, no sobre tarifas históricas.", studies: [14] },
-        { text: "Juvenny Organista analizó los modelos de compra directa de medicamentos desde el aseguramiento y sus resultados en eficiencia y acceso.", studies: [19] },
+        { text: "Juvenny Organista presentó una descripción detallada de los modelos de giro directo, venta directa y compra centralizada de medicamentos desde el aseguramiento, con sus resultados en eficiencia, ahorro y acceso.", studies: [18] },
       ]
     },
     {
@@ -146,9 +148,9 @@ const DATA = {
       color: "cat-e",
       codes: [
         { text: "Luis Eduardo Pino (OxLER) presentó instituciones de salud \"aumentadas\" por capacidades cognitivas y agentes inteligentes para transformar la gestión y la atención.", studies: [9] },
-        { text: "Jacqueline Jaimes (Qualico) mostró casos de uso concretos de IA generativa para la gestión sanitaria: la discusión ya no era si adoptar IA, sino qué decisiones de implementación tomar primero.", studies: [20] },
-        { text: "Juan Carlos Giraldo (ACHC) planteó la agenda de transformación de hospitales y clínicas para 2026–2030.", studies: [17] },
-        { text: "El arquitecto Amedeo Vita y el ingeniero Javier Mora (ACAIH) llamaron a revisar la seguridad sísmica de la infraestructura hospitalaria, con lecciones desde el terremoto del Eje Cafetero de 1999 que siguen vigentes.", studies: [18] },
+        { text: "Jacqueline Jaimes (Qualico) mostró casos de uso concretos de IA generativa para la gestión sanitaria: la discusión ya no era si adoptar IA, sino qué decisiones de implementación tomar primero.", studies: [17] },
+        { text: "Juan Carlos Giraldo (ACHC) planteó la agenda de transformación de hospitales y clínicas para 2026–2030.", studies: [21] },
+        { text: "El arquitecto Amedeo Vita y el ingeniero Javier Mora (ACAIH) llamaron a revisar la seguridad sísmica de la infraestructura hospitalaria, con lecciones desde el terremoto del Eje Cafetero de 1999 que siguen vigentes.", studies: [19] },
         { text: "El congreso cerró con un taller práctico de Andrés Fabián Jiménez sobre modelación contractual avanzada para IPS: costos, notas técnicas y gestión de contratos prospectivos de cara a 2027.", studies: [22] },
       ]
     },
@@ -323,7 +325,7 @@ const DATA = {
       rows: [
         ["Límite de pago 80% público / 70% privado en la intervención de Nueva EPS (sesión 13)", "Sin meta explícita de regularización de contratos para los ≈600 prestadores sin contrato formal"],
         ["Auditoría forense de la UPC (sesión 11)", "Sin mecanismo reportado de retroalimentación operativa hacia las IPS auditadas"],
-        ["Hoja de ruta de trazabilidad total de ADRES (sesión 21)", "Sin evaluación de cómo cambia el flujo de caja percibido por las IPS"],
+        ["Hoja de ruta de trazabilidad total de ADRES (sesión 20)", "Sin evaluación de cómo cambia el flujo de caja percibido por las IPS"],
         ["Casos de uso de IA generativa y agentes inteligentes (sesiones 9 y 17)", "Sin métricas de adopción o de resultado operativo a nivel de IPS"],
         ["Manual tarifario único pendiente (sesión 14)", "Una sola sesión del congreso (22) abordó cómo una IPS modela contractualmente estos cambios"],
       ]
@@ -363,7 +365,7 @@ const DATA = {
       { actor: "Consultoras y proveedores de tecnología", action: "Reportar públicamente resultados de implementación (eficiencia, adopción) y no solo funcionalidades de sus herramientas." },
       { actor: "Academia / investigación", action: "Extender a IPS privadas y mixtas el llamado de la revisión de gobernanza del autor a investigar la gobernanza a nivel micro-institucional." },
     ],
-    sources: "Basada en las sesiones 9, 11, 13, 14, 17, 21 y 22 del congreso, y en las recomendaciones B y C de la revisión de gobernanza del autor (ver \"Análisis relacionado del autor\" en el Resumen ejecutivo).",
+    sources: "Basada en las sesiones 9, 11, 13, 14, 17, 20 y 22 del congreso, y en las recomendaciones B y C de la revisión de gobernanza del autor (ver \"Análisis relacionado del autor\" en el Resumen).",
 
     // ------------------------------------------------------------------
     // Herramienta práctica anidada con la sesión 22 (taller de notas
@@ -413,7 +415,7 @@ const DATA = {
         filename: "nota-tecnica-ips-eps-plantilla.xlsx",
         path: "downloads/nota-tecnica-ips-eps-plantilla.xlsx",
         label: "Descargar plantilla (.xlsx)",
-        note: "Plantilla editable en Excel con los 8 elementos de este mapa mental, una hoja por sección con guías de qué completar y tablas de costos/riesgo listas para llenar (con subtotales calculados). No es un formato oficial ni exigido por ninguna EPS o entidad regulatoria — es una guía práctica basada en esta síntesis."
+        note: "Plantilla editable en Excel con 3 hojas: \"Guía\" (referencia con la sesión del congreso de cada elemento), \"Ingreso de valores\" (los 8 elementos con un ejemplo prediligenciado en azul, listo para reemplazar) y \"Resumen\" (costo total, margen y punto de equilibrio, calculados automáticamente por fórmula a partir de lo que se diligencie). No es un formato oficial ni exigido por ninguna EPS o entidad regulatoria — es una guía práctica basada en esta síntesis."
       }
     },
   },
@@ -430,28 +432,50 @@ const DATA = {
   // Agenda completa (22 sesiones, 2 jornadas)
   // ------------------------------------------------------------------
   agenda: [
-    { n: 1,  day: "Jueves 10 de septiembre", time: "8:00 a.m. – 8:15 a.m.",  title: "Mensaje de la Ministra al XXI Congreso Nacional de Salud", speaker: "Dra. Ana María Vesga", role: "Ministra de Salud y Protección Social", tag: "mensaje de apertura de la Ministra" },
-    { n: 2,  day: "Jueves 10 de septiembre", time: "8:15 a.m. – 9:00 a.m.",  title: "Decisiones sectoriales 2026–2027: variables críticas de vigilancia para prestadores, aseguradores e industria", speaker: "Dr. Carlos Felipe Muñoz", role: "CEO Consultorsalud", tag: "variables críticas de vigilancia 2026-2027" },
-    { n: 3,  day: "Jueves 10 de septiembre", time: "9:00 a.m. – 9:35 a.m.",  title: "Seguros voluntarios, pólizas novedosas de salud y gasto de bolsillo: comportamiento del mercado privado frente a la crisis del sistema público", speaker: "Dr. Fernando Dueñas Castro", role: "Director de la Cámara de Seguros de Salud – Fasecolda", tag: "seguros voluntarios y gasto de bolsillo" },
-    { n: 4,  day: "Jueves 10 de septiembre", time: "9:35 a.m. – 10:10 a.m.", title: "La nueva caja de herramientas del IETS 2026–2030: soluciones para un mejor sistema de salud", speaker: "Dra. Adriana María Robayo", role: "Directora Ejecutiva del Instituto de Evaluación Tecnológica en Salud (IETS)", tag: "nueva caja de herramientas del IETS" },
-    { n: 5,  day: "Jueves 10 de septiembre", time: "10:40 a.m. – 11:20 a.m.", title: "Carga de enfermedad en Colombia 2026: transición epidemiológica, alertas activas y brechas territoriales", speaker: "Dra. Zulma Cucunubá", role: "Directora Instituto Nacional de Salud", tag: "carga de enfermedad en Colombia 2026" },
-    { n: 6,  day: "Jueves 10 de septiembre", time: "11:20 a.m. – 11:55 a.m.", title: "Colombia ante una nueva etapa sanitaria: cooperación, capacidades y transformación del sistema de salud", speaker: "Dr. Ricardo Fábrega", role: "Asesor internacional de sistemas y servicios de salud, OPS/OMS Colombia", tag: "una nueva etapa sanitaria" },
-    { n: 7,  day: "Jueves 10 de septiembre", time: "11:55 a.m. – 12:30 p.m.", title: "Agenda regulatoria 2026–2030: medicamentos, dispositivos médicos y acceso bajo el nuevo gobierno", speaker: "Dra. Sindy Pahola Pulgarín", role: "Directora INVIMA", tag: "agenda regulatoria de medicamentos y dispositivos" },
-    { n: 8,  day: "Jueves 10 de septiembre", time: "2:00 p.m. – 2:40 p.m.",  title: "Flujo de recursos y riesgo sistémico en salud: fuentes, cartera, reclamaciones, embargos y soluciones para recuperar la operación del sistema", speaker: "Dr. Jesús Albrey González Páez", role: "Gerente General, González Páez Abogados", tag: "flujo de recursos y riesgo sistémico" },
-    { n: 9,  day: "Jueves 10 de septiembre", time: "2:40 p.m. – 3:10 p.m.",  title: "Instituciones de la salud aumentadas por IA: capacidades cognitivas y agentes inteligentes para transformar la gestión y la atención", speaker: "Dr. Luis Eduardo Pino Villareal", role: "Fundador y CEO OxLER", tag: "instituciones de salud aumentadas por IA" },
-    { n: 10, day: "Jueves 10 de septiembre", time: "3:10 p.m. – 3:40 p.m.",  title: "Plan de Desarrollo o decretos: límites jurídicos y el impacto de la transformación 2026–2030 en actores y usuarios del sistema", speaker: "Dr. Julio Mario Orozco Africano", role: "Gerente General, Orozco Jervis Consultoría SAS", tag: "límites jurídicos del Plan de Desarrollo" },
-    { n: 11, day: "Jueves 10 de septiembre", time: "4:10 p.m. – 4:40 p.m.",  title: "Auditoría forense de la UPC: detección de riesgos, recuperación de recursos y sostenibilidad", speaker: "Dr. Simón Guzmán Guerrero", role: "Socio Fundador, SAG Assessment & Consulting SAS", tag: "auditoría forense de la UPC" },
-    { n: 12, day: "Jueves 10 de septiembre", time: "4:40 p.m. – 5:10 p.m.",  title: "La agenda legislativa del sector salud en el Congreso de la República: prioridades, posibilidades y plazos", speaker: "Dr. Andrés Forero", role: "Presidente de la Comisión VII del Senado de la República", tag: "agenda legislativa del sector salud" },
-    { n: 13, day: "Viernes 11 de septiembre", time: "8:00 a.m. – 8:50 a.m.",  title: "Nueva EPS: diagnóstico, prioridades y ruta de estabilización", speaker: "Dr. Roberto Solano Navarra", role: "Agente Interventor Nueva EPS", tag: "diagnóstico y ruta de estabilización de Nueva EPS" },
-    { n: 14, day: "Viernes 11 de septiembre", time: "8:50 a.m. – 9:15 a.m.",  title: "Costos, tarifas y precios regulados 2027: decisiones que determinarán el equilibrio financiero entre pagadores y prestadores", speaker: "Dr. Julio César Benedetti", role: "Consultor y asesor en salud", tag: "costos, tarifas y precios regulados" },
-    { n: 15, day: "Viernes 11 de septiembre", time: "9:15 a.m. – 9:50 a.m.",  title: "Salud y Desarrollo: la ecuación económica que Colombia debe resolver — recursos, eficiencia, productividad y decisiones para 2026–2030", speaker: "Dra. Marcela Meléndez", role: "Directora ejecutiva de Fedesarrollo", tag: "la ecuación económica que Colombia debe resolver" },
-    { n: 16, day: "Viernes 11 de septiembre", time: "9:50 a.m. – 10:20 a.m.", title: "Nueva EPS bajo vigilancia: hallazgos, protección de los recursos y medidas para recuperar la atención", speaker: "Dra. Mónica Andrea Ulloa Ruiz", role: "Procuradora delegada para Asuntos de la Salud, Procuraduría General de la Nación", tag: "Nueva EPS bajo vigilancia" },
-    { n: 17, day: "Viernes 11 de septiembre", time: "10:50 a.m. – 11:25 a.m.", title: "IA generativa para la gestión sanitaria: herramientas concretas, casos de uso y decisiones de implementación", speaker: "Dra. Jacqueline Jaimes T.", role: "Gerente General de Qualico SAS", tag: "IA generativa para la gestión sanitaria" },
-    { n: 18, day: "Viernes 11 de septiembre", time: "11:25 a.m. – 12:00 p.m.", title: "Compra directa de medicamentos desde el aseguramiento: modelos y resultados en eficiencia, ahorro y acceso", speaker: "Dra. Juvenny Organista Cardona", role: "Médica y experta en medicamentos", tag: "compra directa de medicamentos" },
-    { n: 19, day: "Viernes 11 de septiembre", time: "12:00 p.m. – 12:35 p.m.", title: "Seguridad hospitalaria frente al riesgo sísmico: qué revisar hoy, qué exige la norma y qué decisiones tomar para proteger la operación", speaker: "Arq. Amedeo Vita · Ing. Javier Mora Daza", role: "Asociación Colombiana de Arquitectos e Ingenieros Hospitalarios (ACAIH)", tag: "seguridad hospitalaria frente al riesgo sísmico" },
-    { n: 20, day: "Viernes 11 de septiembre", time: "2:00 p.m. – 2:40 p.m.",  title: "ADRES 2026–2030: flujo oportuno, trazabilidad y confianza en los recursos de la salud", speaker: "Dr. Iván Sánchez Arango", role: "Director General de la ADRES", tag: "ADRES: flujo oportuno y trazabilidad" },
-    { n: 21, day: "Viernes 11 de septiembre", time: "2:40 p.m. – 3:20 p.m.",  title: "Hospitales y clínicas como actores de transformación: la agenda para la prestación de servicios de salud 2026–2030", speaker: "Dr. Juan Carlos Giraldo", role: "Director general de la Asociación Colombiana de Hospitales y Clínicas (ACHC)", tag: "hospitales y clínicas como actores de transformación" },
-    { n: 22, day: "Viernes 11 de septiembre", time: "3:20 p.m. – 4:20 p.m.",  title: "Modelación contractual avanzada para IPS 2027: costos, notas técnicas y gestión de contratos prospectivos", speaker: "Ing. Andrés Fabián Jiménez T.", role: "Especialista en inteligencia financiera hospitalaria, Synergia C&G", tag: "modelación contractual avanzada para IPS" },
+    { n: 1,  day: "Jueves 10 de septiembre", time: "8:00 a.m. – 8:15 a.m.",  title: "Mensaje de la Ministra al XXI Congreso Nacional de Salud", speaker: "Dra. Ana María Vesga", role: "Ministra de Salud y Protección Social", tag: "mensaje de apertura de la Ministra",
+      conclusion: "Abrió el congreso con tres verbos para el sector: recuperar, estabilizar y transformar." },
+    { n: 2,  day: "Jueves 10 de septiembre", time: "8:15 a.m. – 9:00 a.m.",  title: "Decisiones sectoriales 2026–2027: variables críticas de vigilancia para prestadores, aseguradores e industria", speaker: "Dr. Carlos Felipe Muñoz", role: "CEO Consultorsalud", tag: "variables críticas de vigilancia 2026-2027",
+      conclusion: "Presentó las variables críticas de vigilancia 2026–2027 que enmarcaron el resto del congreso." },
+    { n: 3,  day: "Jueves 10 de septiembre", time: "9:00 a.m. – 9:35 a.m.",  title: "Seguros voluntarios, pólizas novedosas de salud y gasto de bolsillo: comportamiento del mercado privado frente a la crisis del sistema público", speaker: "Dr. Fernando Dueñas Castro", role: "Director de la Cámara de Seguros de Salud – Fasecolda", tag: "seguros voluntarios y gasto de bolsillo",
+      conclusion: "El mercado de seguros voluntarios y el gasto de bolsillo crecen frente a la crisis del sistema público." },
+    { n: 4,  day: "Jueves 10 de septiembre", time: "9:35 a.m. – 10:10 a.m.", title: "La nueva caja de herramientas del IETS 2026–2030: soluciones para un mejor sistema de salud", speaker: "Dra. Adriana María Robayo", role: "Directora Ejecutiva del Instituto de Evaluación Tecnológica en Salud (IETS)", tag: "nueva caja de herramientas del IETS",
+      conclusion: "IETS anunció una nueva caja de herramientas de evaluación de tecnologías en salud para 2026–2030." },
+    { n: 5,  day: "Jueves 10 de septiembre", time: "10:40 a.m. – 11:20 a.m.", title: "Carga de enfermedad en Colombia 2026: transición epidemiológica, alertas activas y brechas territoriales", speaker: "Dra. Zulma Cucunubá", role: "Directora Instituto Nacional de Salud", tag: "carga de enfermedad en Colombia 2026",
+      conclusion: "Transiciones epidemiológicas simultáneas: 56.797 casos de dengue, 58 de fiebre amarilla (letalidad 46,5%) y +92% en infecciones asociadas a la atención en salud." },
+    { n: 6,  day: "Jueves 10 de septiembre", time: "11:20 a.m. – 11:55 a.m.", title: "Colombia ante una nueva etapa sanitaria: cooperación, capacidades y transformación del sistema de salud", speaker: "Dr. Ricardo Fábrega", role: "Asesor internacional de sistemas y servicios de salud, OPS/OMS Colombia", tag: "una nueva etapa sanitaria",
+      conclusion: "Situó las alertas epidemiológicas dentro de una discusión más amplia sobre cooperación y capacidades del sistema." },
+    { n: 7,  day: "Jueves 10 de septiembre", time: "11:55 a.m. – 12:30 p.m.", title: "Agenda regulatoria 2026–2030: medicamentos, dispositivos médicos y acceso bajo el nuevo gobierno", speaker: "Dra. Sindy Pahola Pulgarín", role: "Directora INVIMA", tag: "agenda regulatoria de medicamentos y dispositivos",
+      conclusion: "INVIMA presentó su agenda regulatoria 2026–2030 para medicamentos y dispositivos médicos." },
+    { n: 8,  day: "Jueves 10 de septiembre", time: "2:00 p.m. – 2:40 p.m.",  title: "Flujo de recursos y riesgo sistémico en salud: fuentes, cartera, reclamaciones, embargos y soluciones para recuperar la operación del sistema", speaker: "Dr. Jesús Albrey González Páez", role: "Gerente General, González Páez Abogados", tag: "flujo de recursos y riesgo sistémico",
+      conclusion: "Mapeó el flujo de recursos —cartera, reclamaciones y embargos— que asfixia la operación de las IPS." },
+    { n: 9,  day: "Jueves 10 de septiembre", time: "2:40 p.m. – 3:10 p.m.",  title: "Instituciones de la salud aumentadas por IA: capacidades cognitivas y agentes inteligentes para transformar la gestión y la atención", speaker: "Dr. Luis Eduardo Pino Villareal", role: "Fundador y CEO OxLER", tag: "instituciones de salud aumentadas por IA",
+      conclusion: "Presentó instituciones de salud \"aumentadas\" por capacidades cognitivas y agentes inteligentes." },
+    { n: 10, day: "Jueves 10 de septiembre", time: "3:10 p.m. – 3:40 p.m.",  title: "Plan de Desarrollo o decretos: límites jurídicos y el impacto de la transformación 2026–2030 en actores y usuarios del sistema", speaker: "Dr. Julio Mario Orozco Africano", role: "Gerente General, Orozco Jervis Consultoría SAS", tag: "límites jurídicos del Plan de Desarrollo",
+      conclusion: "Analizó los límites jurídicos del Plan de Desarrollo frente a la vía de decretos." },
+    { n: 11, day: "Jueves 10 de septiembre", time: "4:10 p.m. – 4:40 p.m.",  title: "Auditoría forense de la UPC: detección de riesgos, recuperación de recursos y sostenibilidad", speaker: "Dr. Simón Guzmán Guerrero", role: "Socio Fundador, SAG Assessment & Consulting SAS", tag: "auditoría forense de la UPC",
+      conclusion: "Auditoría forense de la UPC como mecanismo de detección de riesgos y recuperación de recursos." },
+    { n: 12, day: "Jueves 10 de septiembre", time: "4:40 p.m. – 5:10 p.m.",  title: "La agenda legislativa del sector salud en el Congreso de la República: prioridades, posibilidades y plazos", speaker: "Dr. Andrés Forero", role: "Presidente de la Comisión VII del Senado de la República", tag: "agenda legislativa del sector salud",
+      conclusion: "Agenda legislativa pendiente: presupuesto 2027, +12 a 13,9 billones para el sector, ley de competencias territoriales." },
+    { n: 13, day: "Viernes 11 de septiembre", time: "8:00 a.m. – 8:50 a.m.",  title: "Nueva EPS: diagnóstico, prioridades y ruta de estabilización", speaker: "Dr. Roberto Solano Navarra", role: "Agente Interventor Nueva EPS", tag: "diagnóstico y ruta de estabilización de Nueva EPS",
+      conclusion: "De más de 3.800 prestadores, ≈600 operan sin contrato formal; tope de pago 80% público / 70% privado." },
+    { n: 14, day: "Viernes 11 de septiembre", time: "8:50 a.m. – 9:15 a.m.",  title: "Costos, tarifas y precios regulados 2027: decisiones que determinarán el equilibrio financiero entre pagadores y prestadores", speaker: "Dr. Julio César Benedetti", role: "Consultor y asesor en salud", tag: "costos, tarifas y precios regulados",
+      conclusion: "La brecha SOAT (3.281 códigos) frente a CUPS (10.024 procedimientos) exige un manual tarifario único basado en costos reales." },
+    { n: 15, day: "Viernes 11 de septiembre", time: "9:15 a.m. – 9:50 a.m.",  title: "Salud y Desarrollo: la ecuación económica que Colombia debe resolver — recursos, eficiencia, productividad y decisiones para 2026–2030", speaker: "Dra. Marcela Meléndez", role: "Directora ejecutiva de Fedesarrollo", tag: "la ecuación económica que Colombia debe resolver",
+      conclusion: "Déficit estructural de 19,7 billones/año, deudas cruzadas de 25-33 billones, déficit fiscal proyectado de 6% a 9% del PIB." },
+    { n: 16, day: "Viernes 11 de septiembre", time: "9:50 a.m. – 10:20 a.m.", title: "Nueva EPS bajo vigilancia: hallazgos, protección de los recursos y medidas para recuperar la atención", speaker: "Dra. Mónica Andrea Ulloa Ruiz", role: "Procuradora delegada para Asuntos de la Salud, Procuraduría General de la Nación", tag: "Nueva EPS bajo vigilancia",
+      conclusion: "≈23 billones de pesos en radicaciones y facturas sin resolver bajo vigilancia especial." },
+    { n: 17, day: "Viernes 11 de septiembre", time: "10:50 a.m. – 11:25 a.m.", title: "IA generativa para la gestión sanitaria: herramientas concretas, casos de uso y decisiones de implementación", speaker: "Dra. Jacqueline Jaimes T.", role: "Gerente General de Qualico SAS", tag: "IA generativa para la gestión sanitaria",
+      conclusion: "Casos de uso concretos de IA generativa: la discusión ya no es si adoptarla, sino qué decisiones de implementación tomar primero." },
+    { n: 18, day: "Viernes 11 de septiembre", time: "11:25 a.m. – 12:00 p.m.", title: "Compra directa de medicamentos desde el aseguramiento: modelos y resultados en eficiencia, ahorro y acceso", speaker: "Dra. Juvenny Organista Cardona", role: "Médica y experta en medicamentos", tag: "compra directa de medicamentos",
+      conclusion: "Descripción detallada de los modelos de giro directo, venta directa y compra centralizada de medicamentos, con resultados en eficiencia, ahorro y acceso." },
+    { n: 19, day: "Viernes 11 de septiembre", time: "12:00 p.m. – 12:35 p.m.", title: "Seguridad hospitalaria frente al riesgo sísmico: qué revisar hoy, qué exige la norma y qué decisiones tomar para proteger la operación", speaker: "Arq. Amedeo Vita · Ing. Javier Mora Daza", role: "Asociación Colombiana de Arquitectos e Ingenieros Hospitalarios (ACAIH)", tag: "seguridad hospitalaria frente al riesgo sísmico",
+      conclusion: "Llamado a revisar la seguridad sísmica hospitalaria, con lecciones vigentes del terremoto del Eje Cafetero de 1999." },
+    { n: 20, day: "Viernes 11 de septiembre", time: "2:00 p.m. – 2:40 p.m.",  title: "ADRES 2026–2030: flujo oportuno, trazabilidad y confianza en los recursos de la salud", speaker: "Dr. Iván Sánchez Arango", role: "Director General de la ADRES", tag: "ADRES: flujo oportuno y trazabilidad",
+      conclusion: "Hoja de ruta 2026–2030 de ADRES hacia trazabilidad total: \"cada peso con huella digital\"." },
+    { n: 21, day: "Viernes 11 de septiembre", time: "2:40 p.m. – 3:20 p.m.",  title: "Hospitales y clínicas como actores de transformación: la agenda para la prestación de servicios de salud 2026–2030", speaker: "Dr. Juan Carlos Giraldo", role: "Director general de la Asociación Colombiana de Hospitales y Clínicas (ACHC)", tag: "hospitales y clínicas como actores de transformación",
+      conclusion: "Agenda de transformación de hospitales y clínicas para 2026–2030." },
+    { n: 22, day: "Viernes 11 de septiembre", time: "3:20 p.m. – 4:20 p.m.",  title: "Modelación contractual avanzada para IPS 2027: costos, notas técnicas y gestión de contratos prospectivos", speaker: "Ing. Andrés Fabián Jiménez T.", role: "Especialista en inteligencia financiera hospitalaria, Synergia C&G", tag: "modelación contractual avanzada para IPS",
+      conclusion: "Taller de cierre sobre modelación contractual avanzada para IPS: costos, notas técnicas y contratos prospectivos." },
   ],
 
   // ------------------------------------------------------------------
@@ -459,6 +483,7 @@ const DATA = {
   // del repositorio), más reciente primero.
   // ------------------------------------------------------------------
   changelog: [
+    { date: "2026-09-15", summary: "Reorganización como documento de síntesis (resumen, introducción, materiales y métodos, resultados, discusión y recomendaciones, conclusión); agenda con conclusión por sesión y columna combinada de ponente/cargo; corrección de citas de sesión mal asignadas (17-21); plantilla de nota técnica reconstruida en Excel (Guía, Ingreso de valores, Resumen con fórmulas y ejemplo prediligenciado); calculadora SOAT/CUPS retirada; exportación consolidada solo a PDF." },
     { date: "2026-09-15", summary: "Navegación por índice lateral, buscador en vivo, atajos de teclado, modo de lectura enfocada, etiquetas de confiabilidad de datos, panel de fuentes, exportación a Markdown/PDF y mejoras de accesibilidad (WCAG AA)." },
     { date: "2026-09-15", summary: "Mapa mental interactivo y plantilla descargable en Word para notas técnicas de proveedor a EPS, anidados con la sesión 22 (taller de notas técnicas)." },
     { date: "2026-09-15", summary: "Nota técnica sobre la brecha entre intervención e implementación a nivel de IPS, con opciones de cierre y marco de resultados de implementación." },

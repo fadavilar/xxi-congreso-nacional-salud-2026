@@ -120,20 +120,31 @@
   /* ============================================================
      ACCORDION
      ============================================================ */
+  // Estructura tipo artículo científico (resumen → introducción → materiales
+  // y métodos → resultados → discusión y recomendaciones → conclusión), no
+  // la agenda del congreso — para que quien no asistió tenga una lectura
+  // ordenada, y quien sí asistió encuentre valor adicional (diagnóstico
+  // causal, tablero de recomendaciones, nota técnica con herramientas).
   const SECTIONS = [
-    { id:"resumen", num:"01", title:"Resumen ejecutivo", sub:"El congreso en 60 segundos", open:true },
-    { id:"diagnostico", num:"02", title:"Diagnóstico causal", sub:"Modelo de dinámica de sistemas — retoma la revisión de gobernanza del autor", open:false },
-    { id:"ejes", num:"03", title:"Ejes temáticos del congreso", sub:"Financiamiento, tarifas, regulación, epidemiología, prestadores e IA", open:false,
-      subs: DATA.categories.map(c=>({ id:"eje-"+c.id, label:"Eje "+c.id+" — "+c.title })) },
-    { id:"cifras", num:"04", title:"Cifras clave", sub:"Los números que más se citaron en el escenario", open:false,
-      subs: DATA.keyFigureGroups.map((g,i)=>({ id:"cifras-grupo-"+i, label:g.title })) },
-    { id:"agenda", num:"05", title:"Agenda completa", sub:"22 sesiones, dos jornadas, con ponente y cargo", open:false },
-    { id:"recomendaciones", num:"06", title:"Recomendaciones", sub:"Síntesis propia — ancladas en el diagnóstico causal", open:false },
-    { id:"lagunas", num:"07", title:"Lagunas de evidencia", sub:"Qué no se presentó o quedó sin resolver", open:false },
-    { id:"nota-tecnica", num:"08", title:"Nota técnica", sub:"De la intervención a la implementación en IPS y otros prestadores", open:false,
-      subs: [{ id:"nota-tecnica-herramienta", label:"Herramienta práctica: mapa mental + plantilla" }] },
-    { id:"lectura", num:"09", title:"Mi lectura", sub:"Síntesis y reflexión propia del autor", open:false },
-    { id:"metodologia", num:"10", title:"Metodología y fuentes", sub:"Cómo se elaboró esta síntesis, y sus límites", open:false },
+    { id:"resumen", num:"01", title:"Resumen", sub:"El congreso en un párrafo", open:true },
+    { id:"introduccion", num:"02", title:"Introducción", sub:"Por qué este congreso, y cómo leer este documento", open:false },
+    { id:"metodos", num:"03", title:"Materiales y métodos", sub:"Las 22 sesiones y cómo se construyó esta síntesis", open:false,
+      subs: [{ id:"metodos-agenda", label:"Agenda completa (22 sesiones)" }] },
+    { id:"resultados", num:"04", title:"Resultados", sub:"Diagnóstico causal, ejes temáticos y cifras clave", open:false,
+      subs: [
+        { id:"resultados-diagnostico", label:"Diagnóstico causal" },
+        ...DATA.categories.map(c=>({ id:"eje-"+c.id, label:"Eje "+c.id+" — "+c.title })),
+        { id:"resultados-cifras", label:"Cifras clave" },
+        ...DATA.keyFigureGroups.map((g,i)=>({ id:"cifras-grupo-"+i, label:g.title })),
+      ] },
+    { id:"discusion", num:"05", title:"Discusión y recomendaciones", sub:"Implicaciones, lagunas y una nota técnica práctica", open:false,
+      subs: [
+        { id:"discusion-recomendaciones", label:"Recomendaciones" },
+        { id:"discusion-lagunas", label:"Lagunas de evidencia" },
+        { id:"discusion-nota-tecnica", label:"Nota técnica: de la intervención a la implementación" },
+        { id:"nota-tecnica-herramienta", label:"Herramienta práctica: mapa mental + plantilla" },
+      ] },
+    { id:"conclusion", num:"06", title:"Conclusión", sub:"Mi lectura — síntesis y reflexión propia del autor", open:false },
   ];
 
   function buildAccordionShell(){
@@ -216,12 +227,29 @@
     }
   }
 
+  // Small helper for a subsection break inside a merged accordion body
+  // (e.g. "Diagnóstico causal" inside "04 Resultados").
+  function sectionDivider(body, id, title, subtitle){
+    const h = el("h3",{id:id, class:"subsection-title"},[title]);
+    body.appendChild(h);
+    if(subtitle) body.appendChild(el("p",{class:"subsection-subtitle"},[subtitle]));
+    return h;
+  }
+
   /* ============================================================
      RENDER: 01 Resumen
      ============================================================ */
   function renderResumen(){
     const body = document.getElementById("body-resumen");
     body.appendChild(el("p",{},[DATA.intro]));
+  }
+
+  /* ============================================================
+     RENDER: 02 Introducción
+     ============================================================ */
+  function renderIntroduccion(){
+    const body = document.getElementById("body-introduccion");
+    if(DATA.introduction) body.appendChild(el("p",{},[DATA.introduction]));
     body.appendChild(el("div",{class:"selective-box"},[
       el("h4",{},["Lo que atraviesa todo el congreso"]),
       el("h3",{},[DATA.selectiveCategory.title]),
@@ -235,16 +263,15 @@
         el("p",{style:"margin-top:4px"},[rw.text]),
       ]));
     }
-    body.appendChild(el("p",{style:"margin-top:14px;font-size:.85rem;color:var(--text-muted)"},[
-      "Explora las secciones siguientes: el diagnóstico causal (por qué se llega a esta crisis de caja), los ejes temáticos (qué se dijo y quién lo dijo), las cifras clave, la agenda completa, las recomendaciones y lagunas de evidencia, la lectura propia del autor, y finalmente la metodología y fuentes de esta síntesis."
-    ]));
   }
 
   /* ============================================================
-     RENDER: 02 Diagnóstico causal (SVG diagram)
+     RENDER: 04 Resultados — Diagnóstico causal (SVG diagram)
      ============================================================ */
   function renderDiagnostico(){
-    const body = document.getElementById("body-diagnostico");
+    const body = document.getElementById("body-resultados");
+    sectionDivider(body, "resultados-diagnostico", "Diagnóstico causal",
+      "Modelo de dinámica de sistemas — retoma y profundiza la revisión de gobernanza del autor.");
     body.appendChild(el("p",{},[
       "Diagrama de bucles causales construido a partir de las cifras declaradas en el congreso. Toca o pasa el cursor sobre un nodo para ver las sesiones que lo respaldan, o sobre las etiquetas R1 / B1 para leer la explicación completa de cada bucle."
     ]));
@@ -540,10 +567,12 @@
   }
 
   /* ============================================================
-     RENDER: 02 Ejes temáticos
+     RENDER: 04 Resultados — Ejes temáticos
      ============================================================ */
   function renderEjes(){
-    const body = document.getElementById("body-ejes");
+    const body = document.getElementById("body-resultados");
+    sectionDivider(body, "resultados-ejes", "Ejes temáticos del congreso",
+      "Financiamiento, tarifas, regulación, epidemiología, y prestadores/infraestructura/IA.");
     body.appendChild(el("p",{},[
       "Clasificación editorial propia del autor de los puntos más relevantes del congreso, organizada por los grandes temas que atravesaron la agenda. Cada hallazgo cita, entre comillas, la sesión de la agenda que lo respalda — pasa el cursor sobre la cita para ver el número de sesión y el ponente."
     ]));
@@ -598,7 +627,9 @@
     ]);
   }
   function renderCifras(){
-    const body = document.getElementById("body-cifras");
+    const body = document.getElementById("body-resultados");
+    sectionDivider(body, "resultados-cifras", "Cifras clave",
+      "Los números que más se citaron en el escenario.");
     body.appendChild(el("p",{},[
       "Todas estas cifras fueron declaradas por el ponente citado durante su sesión (agenda oficial + anotaciones propias del autor) o provienen de las fuentes públicas indicadas — no son series de tiempo, sino los puntos de dato que se presentaron en el congreso."
     ]));
@@ -650,11 +681,13 @@
   }
 
   /* ============================================================
-     RENDER: 04 Agenda
+     RENDER: 03 Materiales y métodos — Agenda completa
      ============================================================ */
   function renderAgenda(){
-    const body = document.getElementById("body-agenda");
-    body.appendChild(el("p",{},["Filtra por jornada. Las 22 sesiones del XXI Congreso Nacional de Salud, con horario, ponente y cargo."]));
+    const body = document.getElementById("body-metodos");
+    sectionDivider(body, "metodos-agenda", "Agenda completa",
+      "El material de esta síntesis: las 22 sesiones del congreso, con la conclusión más relevante de cada una.");
+    body.appendChild(el("p",{},["Filtra por jornada. Ponente y cargo van en una sola columna para mantener la tabla legible."]));
 
     const days = ["Todas", ...Array.from(new Set(DATA.agenda.map(a=>a.day)))];
     const filterRow = el("div",{class:"filter-row"});
@@ -669,17 +702,17 @@
     });
     const actions = el("div",{class:"data-table-actions", style:"flex:1"});
     actions.appendChild(makeDownloadLink("agenda_congreso.csv",
-      ["#","Día","Hora","Sesión","Ponente","Cargo"],
-      DATA.agenda.map(a=>[String(a.n), a.day, a.time, a.title, a.speaker, a.role])
+      ["#","Día","Hora","Sesión","Ponente","Cargo","Conclusión más relevante"],
+      DATA.agenda.map(a=>[String(a.n), a.day, a.time, a.title, a.speaker, a.role, a.conclusion||""])
     ));
     body.appendChild(el("div",{style:"display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px"},[filterRow, actions]));
 
     const tableWrap = el("div",{class:"table-wrap"});
     const table = el("table",{class:"studies", id:"agenda-table"},[
-      el("caption",{class:"sr-only"},["Agenda completa del XXI Congreso Nacional de Salud, 22 sesiones con día, hora, título, ponente y cargo"]),
+      el("caption",{class:"sr-only"},["Agenda completa del XXI Congreso Nacional de Salud, 22 sesiones con día, hora, título, ponente, cargo y conclusión más relevante"]),
       el("thead",{},[ el("tr",{},[
         el("th",{},["#"]), el("th",{},["Día"]), el("th",{},["Hora"]),
-        el("th",{},["Sesión"]), el("th",{},["Ponente"]), el("th",{},["Cargo"]),
+        el("th",{},["Sesión"]), el("th",{},["Ponente y cargo"]), el("th",{},["Conclusión más relevante"]),
       ])]),
       el("tbody",{id:"agenda-tbody"}),
     ]);
@@ -695,11 +728,12 @@
         el("td",{},[el("span",{class:"study-ref"},[String(a.n)])]),
         el("td",{},[el("span",{class:"db-badge"},[a.day.replace(" de septiembre","")])]),
         el("td",{style:"white-space:nowrap"},[a.time]),
-        el("td",{style:"min-width:240px"},[a.title]),
-        el("td",{style:"white-space:nowrap"},[
-          el("span",{class:"speaker-cell"},[ avatarEl(a.speaker, 28), el("span",{},[a.speaker]) ])
+        el("td",{style:"min-width:220px"},[a.title]),
+        el("td",{style:"min-width:190px"},[
+          el("div",{class:"speaker-cell"},[ avatarEl(a.speaker, 28), el("span",{},[a.speaker]) ]),
+          el("div",{class:"agenda-role"},[a.role]),
         ]),
-        el("td",{style:"min-width:180px"},[a.role]),
+        el("td",{style:"min-width:240px"},[a.conclusion || ""]),
       ]));
     });
   }
@@ -708,7 +742,9 @@
      RENDER: 06 Recomendaciones
      ============================================================ */
   function renderRecomendaciones(){
-    const body = document.getElementById("body-recomendaciones");
+    const body = document.getElementById("body-discusion");
+    sectionDivider(body, "discusion-recomendaciones", "Recomendaciones",
+      "Tablero de acción — síntesis propia, ancladas en el diagnóstico causal.");
     body.appendChild(el("p",{},[
       "Síntesis propia del autor, ancladas en los puntos de apalancamiento del diagnóstico causal (sección anterior). No son conclusiones del congreso ni posiciones de Consultorsalud o de los ponentes citados."
     ]));
@@ -738,10 +774,12 @@
   }
 
   /* ============================================================
-     RENDER: 07 Lagunas de evidencia
+     RENDER: 05 Discusión — Lagunas de evidencia
      ============================================================ */
   function renderLagunas(){
-    const body = document.getElementById("body-lagunas");
+    const body = document.getElementById("body-discusion");
+    sectionDivider(body, "discusion-lagunas", "Lagunas de evidencia",
+      "Qué no se presentó o quedó sin resolver.");
     const list = el("ul",{class:"gap-list"});
     DATA.gaps.forEach(g=> list.appendChild(el("li",{},[g])));
     body.appendChild(list);
@@ -751,8 +789,10 @@
      RENDER: 08 Nota técnica
      ============================================================ */
   function renderNotaTecnica(){
-    const body = document.getElementById("body-nota-tecnica");
+    const body = document.getElementById("body-discusion");
     const t = DATA.technicalNote;
+    sectionDivider(body, "discusion-nota-tecnica", "Nota técnica",
+      "De la intervención a la implementación en IPS y otros prestadores.");
 
     body.appendChild(el("div",{class:"selective-box"},[
       el("h4",{},["Nota técnica"]),
@@ -936,10 +976,10 @@
   }
 
   /* ============================================================
-     RENDER: 09 Mi lectura
+     RENDER: 06 Conclusión (Mi lectura)
      ============================================================ */
-  function renderLectura(){
-    const body = document.getElementById("body-lectura");
+  function renderConclusion(){
+    const body = document.getElementById("body-conclusion");
     body.appendChild(el("div",{class:"selective-box"},[
       el("h4",{},["Síntesis y opinión personal del autor"]),
       el("p",{},[DATA.reading.text]),
@@ -948,10 +988,10 @@
   }
 
   /* ============================================================
-     RENDER: 10 Metodología y fuentes
+     RENDER: 03 Materiales y métodos — Metodología y fuentes
      ============================================================ */
   function renderMetodologia(){
-    const body = document.getElementById("body-metodologia");
+    const body = document.getElementById("body-metodos");
     const m = DATA.methodology;
     body.appendChild(el("p",{},[m.note]));
 
@@ -1089,32 +1129,31 @@
   function buildSearchIndex(){
     const idx = [];
     DATA.agenda.forEach(a=>{
-      idx.push({ type:"Ponente", label:a.speaker, detail:a.role+" · sesión "+a.n+" · "+a.title, sectionId:"agenda", anchorId:"sec-agenda" });
-      idx.push({ type:"Sesión "+a.n, label:a.title, detail:a.speaker+" — "+a.role, sectionId:"agenda", anchorId:"sec-agenda" });
+      idx.push({ type:"Ponente", label:a.speaker, detail:a.role+" · sesión "+a.n+" · "+a.title, sectionId:"metodos", anchorId:"metodos-agenda" });
+      idx.push({ type:"Sesión "+a.n, label:a.title, detail:(a.conclusion?a.conclusion+" — ":"")+a.speaker+" — "+a.role, sectionId:"metodos", anchorId:"metodos-agenda" });
     });
     DATA.categories.forEach(cat=>{
       cat.codes.forEach(code=>{
-        idx.push({ type:"Eje "+cat.id, label: code.text.length>90? code.text.slice(0,90)+"…" : code.text, detail: cat.title, sectionId:"ejes", anchorId:"eje-"+cat.id });
+        idx.push({ type:"Eje "+cat.id, label: code.text.length>90? code.text.slice(0,90)+"…" : code.text, detail: cat.title, sectionId:"resultados", anchorId:"eje-"+cat.id });
       });
     });
     DATA.keyFigureGroups.forEach((g,gi)=>{
       g.figures.forEach(f=>{
-        idx.push({ type:"Cifra", label: f.value+" — "+f.label, detail: f.detail, sectionId:"cifras", anchorId:"cifras-grupo-"+gi });
+        idx.push({ type:"Cifra", label: f.value+" — "+f.label, detail: f.detail, sectionId:"resultados", anchorId:"cifras-grupo-"+gi });
       });
     });
     DATA.comparisonIndicators.forEach(ci=>{
-      idx.push({ type:"Cifra", label: ci.title, detail: ci.before.value+" → "+ci.after.value, sectionId:"cifras", anchorId:"sec-cifras" });
+      idx.push({ type:"Cifra", label: ci.title, detail: ci.before.value+" → "+ci.after.value, sectionId:"resultados", anchorId:"resultados-cifras" });
     });
     DATA.recommendations.forEach(r=>{
-      idx.push({ type:"Recomendación", label:r.title, detail:r.leverage, sectionId:"recomendaciones", anchorId:"sec-recomendaciones" });
+      idx.push({ type:"Recomendación", label:r.title, detail:r.leverage, sectionId:"discusion", anchorId:"discusion-recomendaciones" });
     });
     DATA.gaps.forEach(g=>{
-      idx.push({ type:"Laguna", label: g.length>90? g.slice(0,90)+"…" : g, detail:"Lagunas de evidencia", sectionId:"lagunas", anchorId:"sec-lagunas" });
+      idx.push({ type:"Laguna", label: g.length>90? g.slice(0,90)+"…" : g, detail:"Lagunas de evidencia", sectionId:"discusion", anchorId:"discusion-lagunas" });
     });
-    idx.push({ type:"Sección", label:"Diagnóstico causal", detail:"Bucles R1 (crisis de caja) y B1 (trazabilidad y auditoría)", sectionId:"diagnostico", anchorId:"sec-diagnostico" });
-    idx.push({ type:"Sección", label:"Nota técnica", detail:"Intervención vs. implementación en IPS", sectionId:"nota-tecnica", anchorId:"sec-nota-tecnica" });
-    idx.push({ type:"Herramienta", label:"Mapa mental: nota técnica IPS → EPS", detail:"Mapa mental y plantilla descargable", sectionId:"nota-tecnica", anchorId:"nota-tecnica-herramienta" });
-    idx.push({ type:"Herramienta", label:"Calculadora: brecha SOAT/CUPS", detail:"Cifras clave", sectionId:"cifras", anchorId:"sec-cifras" });
+    idx.push({ type:"Sección", label:"Diagnóstico causal", detail:"Bucles R1 (crisis de caja) y B1 (trazabilidad y auditoría)", sectionId:"resultados", anchorId:"resultados-diagnostico" });
+    idx.push({ type:"Sección", label:"Nota técnica", detail:"Intervención vs. implementación en IPS", sectionId:"discusion", anchorId:"discusion-nota-tecnica" });
+    idx.push({ type:"Herramienta", label:"Mapa mental: nota técnica IPS → EPS", detail:"Mapa mental y plantilla descargable", sectionId:"discusion", anchorId:"nota-tecnica-herramienta" });
     return idx;
   }
   function openSearch(){
@@ -1308,15 +1347,16 @@
     renderHero();
     buildAccordionShell();
     renderResumen();
+    renderIntroduccion();
+    renderMetodologia();
+    renderAgenda();
     renderDiagnostico();
     renderEjes();
     renderCifras();
-    renderAgenda();
     renderRecomendaciones();
     renderLagunas();
     renderNotaTecnica();
-    renderLectura();
-    renderMetodologia();
+    renderConclusion();
 
     renderSidebarTOC();
     renderSourcesPanel();

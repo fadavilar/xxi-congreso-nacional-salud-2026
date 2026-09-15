@@ -6,16 +6,14 @@ Síntesis interactiva de un artículo de LinkedIn de autoría propia sobre el XX
 
 ## Contenido de la app
 
-1. **Resumen ejecutivo** — el congreso en 60 segundos (1.200+ líderes, 22 conferencias, 2 días), con enlace a la revisión de gobernanza previa del autor.
-2. **Diagnóstico causal** — diagrama interactivo de bucles causales (Homer & Hirsch, 2006): R1 (el círculo de la crisis de caja) y B1 (trazabilidad y auditoría preventiva), que retoma y profundiza el modelo R1/B1 de esa revisión previa.
-3. **Ejes temáticos del congreso** — financiamiento y sostenibilidad, tarifas y precios regulados, regulación e institucionalidad, epidemiología, y prestadores/infraestructura/IA — cada hallazgo cita, entre comillas, la sesión de la agenda que lo respalda.
-4. **Cifras clave** — los números más citados en el escenario (déficit fiscal, cartera de Nueva EPS, brecha tarifaria SOAT/CUPS, alertas epidemiológicas), cada una con su fuente.
-5. **Agenda completa** — tabla filtrable de las 22 sesiones (dos jornadas), con horario, foto o iniciales del ponente, y cargo.
-6. **Recomendaciones** — síntesis propia del autor, ancladas en los puntos de apalancamiento del diagnóstico causal.
-7. **Lagunas de evidencia** — qué no se presentó o quedó sin resolver en el congreso.
-8. **Nota técnica** — nota de política pública (contexto → brecha → opciones → próximos pasos) sobre la brecha entre intervención y implementación a nivel de IPS, más una herramienta práctica anidada con el taller de notas técnicas del congreso (sesión 22): un mapa mental interactivo de los elementos de una nota técnica de proveedor a EPS y una plantilla descargable en Excel.
-9. **Mi lectura** — síntesis y opinión personal del autor.
-10. **Metodología y fuentes** — cómo se elaboró esta síntesis y sus límites declarados.
+La app está organizada como un documento de síntesis (resumen → introducción → materiales y métodos → resultados → discusión y recomendaciones → conclusión), no como la agenda del congreso — pensada para que quien no asistió tenga una lectura ordenada, y quien sí asistió encuentre valor adicional (diagnóstico causal, tablero de recomendaciones, nota técnica con herramientas descargables).
+
+1. **Resumen** — el congreso en un párrafo.
+2. **Introducción** — por qué este congreso, cómo se organiza este documento, y su relación con la revisión de gobernanza previa del autor.
+3. **Materiales y métodos** — metodología y fuentes de esta síntesis, más la **agenda completa**: tabla filtrable de las 22 sesiones (ponente y cargo en una sola columna, y una columna con la conclusión más relevante de cada una).
+4. **Resultados** — diagnóstico causal (diagrama de bucles R1/B1, Homer & Hirsch 2006), ejes temáticos (cada hallazgo cita, entre comillas, la sesión que lo respalda) y cifras clave.
+5. **Discusión y recomendaciones** — tablero de acción con las recomendaciones del autor, lagunas de evidencia, y una nota técnica (contexto → brecha → opciones → próximos pasos) sobre la brecha entre intervención e implementación en IPS, con una herramienta práctica anidada con el taller de notas técnicas del congreso (sesión 22): mapa mental interactivo + plantilla descargable en Excel.
+6. **Conclusión** — mi lectura: síntesis y opinión personal del autor.
 
 ## Nota sobre el alcance de esta app
 
@@ -44,7 +42,7 @@ HTML/CSS/JS sin build step ni frameworks (fácil de servir con GitHub Pages), si
 - `js/data.js` — todo el contenido editorial (diagnóstico causal, ejes temáticos, cifras clave, agenda, recomendaciones, lagunas, nota técnica, lectura, metodología, fotos de ponentes, changelog, etiquetas de confiabilidad).
 - `js/app.js` — renderizado, tema claro/oscuro persistente, acordeones, diagramas SVG interactivos y accesibles, índice/scrollspy, buscador, atajos de teclado, exportación a PDF.
 - `img/speakers/` — retratos oficiales de funcionarios públicos (ver "Fotos de ponentes" abajo).
-- `downloads/nota-tecnica-ips-eps-plantilla.xlsx` — plantilla descargable en Excel (una hoja por sección, con subtotal de costos calculado) de nota técnica de proveedor a EPS (sección "Nota técnica").
+- `downloads/nota-tecnica-ips-eps-plantilla.xlsx` — plantilla descargable en Excel: hoja "Guía" (referencia con la sesión del congreso de cada elemento), "Ingreso de valores" (los 8 elementos con un ejemplo prediligenciado, listo para reemplazar) y "Resumen" (costo total, margen y punto de equilibrio calculados por fórmula a partir de lo diligenciado).
 
 Para editar contenido, generalmente basta con modificar `js/data.js`; el resto se renderiza automáticamente.
 
