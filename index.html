@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>XXI Congreso Nacional de Salud 2026 — Explorador interactivo</title>
+<meta name="description" content="Explorador interactivo de los ejes temáticos, cifras clave y agenda completa del XXI Congreso Nacional de Salud (Bogotá, 10–11 de septiembre de 2026), organizado por Consultorsalud.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🩺</text></svg>">
+<link rel="stylesheet" href="css/style.css">
+
+<meta property="og:title" content="XXI Congreso Nacional de Salud 2026 — Explorador interactivo">
+<meta property="og:description" content="Ejes temáticos, cifras clave y agenda completa del Congreso Nacional de Salud 2026, con la lectura propia del autor.">
+<meta property="og:type" content="website">
+</head>
+<body>
+
+<a href="#main" class="sr-only">Saltar al contenido</a>
+
+<header class="site-header">
+  <div class="container bar">
+    <div class="brand">
+      <span class="dot" aria-hidden="true"></span>
+      <span id="brand-title">XXI Congreso Nacional de Salud</span>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn theme-toggle" id="theme-toggle" type="button" aria-label="Cambiar modo claro/oscuro" title="Modo claro / oscuro">
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.4 4.4l1.7 1.7M17.9 17.9l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.4 19.6l1.7-1.7M17.9 6.1l1.7-1.7"/></svg>
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5z"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="container">
+    <section class="hero">
+      <span class="eyebrow" id="hero-framework">Síntesis de congreso</span>
+      <span class="eyebrow" id="hero-period" style="background:transparent;padding-left:0"></span>
+      <h1 id="hero-title">XXI Congreso Nacional de Salud 2026</h1>
+      <p class="lede" id="hero-lede">Explorador interactivo de los ejes temáticos, las cifras clave y la agenda completa.</p>
+      <p class="byline" id="byline"></p>
+      <div class="stat-grid" id="stat-grid"></div>
+    </section>
+
+    <div class="toolbar">
+      <span class="hint">6 secciones · el resumen ejecutivo está abierto, el resto se expande a tu ritmo</span>
+      <div style="display:flex;gap:8px">
+        <button class="btn" id="collapse-all" type="button">Colapsar todo</button>
+        <button class="btn btn-primary" id="expand-all" type="button">Expandir todo</button>
+      </div>
+    </div>
+
+    <div class="accordion" id="accordion"></div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="disclaimer" id="footer-disclaimer"></div>
+    <p id="footer-author"></p>
+    <p>© <span id="year"></span> · Contenido publicado con fines de divulgación profesional. "Mi lectura" es una opinión personal del autor.</p>
+    <div class="cc-block">
+      <a class="cc-badge" id="cc-badge" href="#" target="_blank" rel="license noopener"></a>
+      <p id="footer-license-text"></p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
