@@ -301,6 +301,20 @@ p{ margin: 0 0 .8em; }
 .speaker-cell{ display:inline-flex; align-items:center; gap:8px; }
 
 /* ============================================================
+   Mind map (nota técnica IPS → EPS)
+   ============================================================ */
+.mindmap-edge{ fill:none; stroke: var(--border); stroke-width: 1.8; }
+.node-box.mindmap-hub rect{ fill: var(--primary); stroke: var(--primary); }
+.node-box.mindmap-hub text{ fill: #fff; font-weight:800; font-size:12.5px; }
+.template-download{
+  display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  background: var(--surface-2); border:1px solid var(--border); border-radius: var(--radius);
+  padding: 14px 16px; margin-top: 16px;
+}
+.template-download strong{ font-size:.92rem; }
+.template-download .btn{ flex:none; white-space:nowrap; }
+
+/* ============================================================
    Causal diagram
    ============================================================ */
 .diagram-wrap{

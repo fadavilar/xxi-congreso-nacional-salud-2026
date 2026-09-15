@@ -227,7 +227,7 @@
 
     const wrap = el("div",{class:"diagram-wrap"});
     wrap.appendChild(buildCausalSVG());
-    const tooltipEl = el("div",{class:"diagram-tooltip",id:"diagram-tooltip",hidden:"hidden"});
+    const tooltipEl = el("div",{class:"diagram-tooltip",hidden:"hidden"});
     tooltipEl.addEventListener("mouseenter", cancelHideTooltip);
     tooltipEl.addEventListener("mouseleave", scheduleHideTooltip);
     wrap.appendChild(tooltipEl);
@@ -417,8 +417,8 @@
     gEl.addEventListener("click", (e)=>{ e.stopPropagation(); show(); });
   }
   function showDiagramTooltip(targetEl, html){
-    const tooltip = document.getElementById("diagram-tooltip");
     const wrap = targetEl.closest(".diagram-wrap");
+    const tooltip = wrap ? wrap.querySelector(".diagram-tooltip") : null;
     if(!tooltip || !wrap) return;
     tooltip.innerHTML = html;
     tooltip.hidden = false;
@@ -438,8 +438,7 @@
     });
   }
   function hideDiagramTooltip(){
-    const tooltip = document.getElementById("diagram-tooltip");
-    if(tooltip) tooltip.hidden = true;
+    document.querySelectorAll(".diagram-tooltip").forEach(t=> t.hidden = true);
     document.querySelectorAll(".node-box, .loop-tag-group").forEach(n=>n.classList.remove("active"));
   }
   let tooltipHideTimer = null;
@@ -705,6 +704,118 @@
     body.appendChild(stepsList);
 
     body.appendChild(el("p",{class:"indicator-source", style:"margin-top:16px"},[t.sources]));
+
+    // 7. Herramienta práctica — mapa mental + plantilla, anidados con la sesión 22
+    const pt = t.providerNoteTool;
+    if(pt){
+      body.appendChild(el("h4",{style:"font-size:.86rem;margin-top:26px"},["7. Herramienta práctica: nota técnica de un prestador a una EPS"]));
+      body.appendChild(el("p",{},[pt.intro]));
+
+      const wrap = el("div",{class:"diagram-wrap"});
+      wrap.appendChild(buildMindMapSVG(pt));
+      const tooltipEl = el("div",{class:"diagram-tooltip",hidden:"hidden"});
+      tooltipEl.addEventListener("mouseenter", cancelHideTooltip);
+      tooltipEl.addEventListener("mouseleave", scheduleHideTooltip);
+      wrap.appendChild(tooltipEl);
+      body.appendChild(wrap);
+      body.appendChild(el("p",{class:"diagram-hint"},["Toca o pasa el cursor sobre cada rama para ver los elementos que la componen."]));
+
+      if(pt.template){
+        const tpl = pt.template;
+        const dlBox = el("div",{class:"template-download"},[
+          el("div",{},[
+            el("strong",{},[tpl.label.replace("Descargar ","")]),
+            el("p",{style:"margin:4px 0 0;font-size:.82rem;color:var(--text-muted)"},[tpl.note]),
+          ]),
+          el("a",{class:"btn btn-primary", href:tpl.path, download:tpl.filename},[
+            el("svg",{viewBox:"0 0 24 24",fill:"none",width:"16",height:"16",html:'<path d="M12 4v11m0 0l-4-4m4 4l4-4M5 19h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'}),
+            tpl.label,
+          ]),
+        ]);
+        body.appendChild(dlBox);
+      }
+    }
+  }
+
+  function buildMindMapSVG(pt){
+    const svgNS = "http://www.w3.org/2000/svg";
+    const W = 820, H = 800;
+    const cx = W/2, cy = H/2, R = 280;
+    const branches = pt.branches;
+    const n = branches.length;
+    const pos = {};
+    branches.forEach((b,i)=>{
+      const angle = -Math.PI/2 + (i * (2*Math.PI/n));
+      pos[b.id] = { x: cx + R*Math.cos(angle), y: cy + R*Math.sin(angle) };
+    });
+
+    const svg = document.createElementNS(svgNS,"svg");
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    svg.setAttribute("width","100%");
+    svg.setAttribute("role","img");
+    svg.setAttribute("aria-label","Mapa mental de los elementos de una nota técnica de un prestador a una EPS");
+
+    // Connecting lines hub -> branch
+    branches.forEach(b=>{
+      const p = pos[b.id];
+      const path = document.createElementNS(svgNS,"path");
+      path.setAttribute("d", `M ${cx} ${cy} L ${p.x} ${p.y}`);
+      path.setAttribute("class","edge-path mindmap-edge");
+      svg.appendChild(path);
+    });
+
+    // Central hub
+    const hub = document.createElementNS(svgNS,"g");
+    hub.setAttribute("class","node-box mindmap-hub");
+    const hubWords = wrapLabel(pt.center, 16);
+    const hubW = 190, hubLineH = 15, hubH = 26 + hubWords.length*hubLineH;
+    let hubHtml = `<rect x="${cx-hubW/2}" y="${cy-hubH/2}" width="${hubW}" height="${hubH}" rx="14"></rect>`;
+    hubWords.forEach((w,i)=>{
+      hubHtml += `<text x="${cx}" y="${cy - hubH/2 + 20 + i*hubLineH}" text-anchor="middle">${escapeXML(w)}</text>`;
+    });
+    hub.innerHTML = hubHtml;
+    svg.appendChild(hub);
+
+    // Branch nodes
+    branches.forEach(b=>{
+      const p = pos[b.id];
+      const g = document.createElementNS(svgNS,"g");
+      g.setAttribute("class","node-box");
+      const words = wrapLabel(b.label, 17);
+      const boxW = 172, lineH = 13;
+      const boxH = 24 + words.length*lineH;
+      let html = `<rect x="${p.x-boxW/2}" y="${p.y-boxH/2}" width="${boxW}" height="${boxH}" rx="10"></rect>`;
+      words.forEach((w,i)=>{
+        html += `<text x="${p.x}" y="${p.y - boxH/2 + 16 + i*lineH}" text-anchor="middle">${escapeXML(w)}</text>`;
+      });
+      g.innerHTML = html;
+      attachBranchTooltip(g, b);
+      svg.appendChild(g);
+    });
+
+    svg.addEventListener("mouseleave", scheduleHideTooltip);
+    return svg;
+  }
+  function branchTooltipHTML(b){
+    let html = `<h5>${escapeXML(b.label)}</h5>`;
+    html += `<ul class="cite-list">` + b.items.map(it=>`<li>${escapeXML(it)}</li>`).join("") + `</ul>`;
+    if(b.sessions && b.sessions.length){
+      html += `<p>` + b.sessions.map(n=>{
+        const s = sessionById(n);
+        return s ? `"${escapeXML(s.tag)}"` : `sesión ${n}`;
+      }).join(" · ") + `</p>`;
+    }
+    return html;
+  }
+  function attachBranchTooltip(gEl, branch){
+    const show = ()=>{
+      cancelHideTooltip();
+      document.querySelectorAll(".node-box").forEach(n=>n.classList.remove("active"));
+      gEl.classList.add("active");
+      showDiagramTooltip(gEl, branchTooltipHTML(branch));
+    };
+    gEl.addEventListener("mouseenter", show);
+    gEl.addEventListener("click", (e)=>{ e.stopPropagation(); show(); });
   }
 
   /* ============================================================

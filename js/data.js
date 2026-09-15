@@ -349,6 +349,58 @@ const DATA = {
       { actor: "Academia / investigación", action: "Extender a IPS privadas y mixtas el llamado de la revisión de gobernanza del autor a investigar la gobernanza a nivel micro-institucional." },
     ],
     sources: "Basada en las sesiones 9, 11, 13, 14, 17, 21 y 22 del congreso, y en las recomendaciones B y C de la revisión de gobernanza del autor (ver \"Análisis relacionado del autor\" en el Resumen ejecutivo).",
+
+    // ------------------------------------------------------------------
+    // Herramienta práctica anidada con la sesión 22 (taller de notas
+    // técnicas): mapa mental interactivo + plantilla descargable de los
+    // elementos a considerar al construir una nota técnica de un
+    // prestador (IPS u otro) hacia una EPS. Síntesis propia del autor,
+    // no un formato oficial ni exigido por ninguna entidad.
+    // ------------------------------------------------------------------
+    providerNoteTool: {
+      intro: "El congreso cerró con un taller práctico sobre modelación contractual avanzada para IPS — costos, notas técnicas y gestión de contratos prospectivos (sesión 22). A partir de esa sesión y de los hallazgos de tarifas (sesión 14) y epidemiología (sesión 5), este mapa mental resume los elementos que una nota técnica de un prestador hacia una EPS debería considerar. Toca o pasa el cursor sobre cada rama para ver el detalle.",
+      center: "Nota técnica: IPS → EPS",
+      branches: [
+        {
+          id: 1, label: "Identificación y alcance", sessions: [22],
+          items: ["IPS / prestador y nivel de complejidad", "Línea de servicio o especialidad", "EPS o pagador destinatario", "Vigencia y período cubierto", "Población objetivo (afiliados cubiertos)"]
+        },
+        {
+          id: 2, label: "Marco tarifario de referencia", sessions: [14, 22],
+          items: ["Manual tarifario aplicado (SOAT, ISS 2001, tarifario propio)", "Códigos CUPS cubiertos vs. no cubiertos", "Ajustes pactados frente al período anterior", "Justificación de desviaciones frente a tarifas históricas"]
+        },
+        {
+          id: 3, label: "Estructura de costos", sessions: [14, 22],
+          items: ["Costos directos: personal, insumos, medicamentos", "Costos indirectos / overhead", "Costos fijos vs. variables", "Punto de equilibrio (break-even)"]
+        },
+        {
+          id: 4, label: "Supuestos de utilización", sessions: [5, 22],
+          items: ["Frecuencia de uso esperada por afiliado", "Base epidemiológica o demanda proyectada", "Estacionalidad o variabilidad esperada", "Fuente de los datos históricos"]
+        },
+        {
+          id: 5, label: "Modelo de pago propuesto", sessions: [22],
+          items: ["Capitación / evento / paquete / resultado", "Justificación técnica de la modalidad", "Ajuste por inflación o IPC", "Periodicidad de revisión tarifaria"]
+        },
+        {
+          id: 6, label: "Riesgo compartido", sessions: [22],
+          items: ["Corredor de riesgo (risk corridor)", "Techo (stop-loss)", "Piso de garantía", "Responsabilidad por desviaciones"]
+        },
+        {
+          id: 7, label: "Indicadores de calidad y resultado", sessions: [22],
+          items: ["Indicadores de calidad asociados al pago", "Metas de oportunidad de atención", "Indicadores de satisfacción del usuario", "Incentivos o penalidades por cumplimiento"]
+        },
+        {
+          id: 8, label: "Anexos y soportes", sessions: [22],
+          items: ["Histórico de utilización o facturación (12–24 meses)", "Benchmarks de mercado o de la red", "Memoria de cálculo / hoja de costeo", "Soportes normativos citados"]
+        },
+      ],
+      template: {
+        filename: "nota-tecnica-ips-eps-plantilla.docx",
+        path: "downloads/nota-tecnica-ips-eps-plantilla.docx",
+        label: "Descargar plantilla (.docx)",
+        note: "Plantilla editable con los 8 elementos de este mapa mental, guías de qué completar en cada sección y tablas de costo/riesgo listas para llenar. No es un formato oficial ni exigido por ninguna EPS o entidad regulatoria — es una guía práctica basada en esta síntesis."
+      }
+    },
   },
 
   // ------------------------------------------------------------------

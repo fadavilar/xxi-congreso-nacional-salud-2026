@@ -13,8 +13,9 @@ Síntesis interactiva de un artículo de LinkedIn de autoría propia sobre el XX
 5. **Agenda completa** — tabla filtrable de las 22 sesiones (dos jornadas), con horario, foto o iniciales del ponente, y cargo.
 6. **Recomendaciones** — síntesis propia del autor, ancladas en los puntos de apalancamiento del diagnóstico causal.
 7. **Lagunas de evidencia** — qué no se presentó o quedó sin resolver en el congreso.
-8. **Mi lectura** — síntesis y opinión personal del autor.
-9. **Metodología y fuentes** — cómo se elaboró esta síntesis y sus límites declarados.
+8. **Nota técnica** — nota de política pública (contexto → brecha → opciones → próximos pasos) sobre la brecha entre intervención y implementación a nivel de IPS, más una herramienta práctica anidada con el taller de notas técnicas del congreso (sesión 22): un mapa mental interactivo de los elementos de una nota técnica de proveedor a EPS y una plantilla descargable en Word.
+9. **Mi lectura** — síntesis y opinión personal del autor.
+10. **Metodología y fuentes** — cómo se elaboró esta síntesis y sus límites declarados.
 
 ## Nota sobre el alcance de esta app
 
@@ -33,6 +34,7 @@ HTML/CSS/JS sin build step (fácil de servir con GitHub Pages), siguiendo el mis
 - `js/data.js` — todo el contenido editorial (diagnóstico causal, ejes temáticos, cifras clave, agenda, recomendaciones, lagunas, lectura, metodología, fotos de ponentes).
 - `js/app.js` — renderizado, tema claro/oscuro persistente, acordeones (expandir/colapsar todo), diagrama causal SVG interactivo, tablas filtrables y avatares de ponentes.
 - `img/speakers/` — retratos oficiales de funcionarios públicos (ver "Fotos de ponentes" abajo).
+- `downloads/nota-tecnica-ips-eps-plantilla.docx` — plantilla descargable de nota técnica de proveedor a EPS (sección "Nota técnica").
 
 Para editar contenido, generalmente basta con modificar `js/data.js`; el resto se renderiza automáticamente.
 
