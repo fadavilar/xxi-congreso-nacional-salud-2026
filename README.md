@@ -25,18 +25,33 @@ Esta aplicación es una síntesis editorial de un evento de industria, basada en
 
 Solo se muestran retratos oficiales tomados del sitio institucional propio de cada funcionario público (INS, INVIMA, IETS, ADRES, Cámara de Representantes — fuente citada al pasar el cursor sobre cada foto). Los ponentes del sector privado, y los funcionarios públicos sin retrato oficial disponible en su propio sitio, se muestran con iniciales — nunca con fotos de redes sociales o prensa de terceros.
 
+## Navegación, búsqueda y accesibilidad
+
+- **Índice lateral pegajoso** con subsecciones (ejes, grupos de cifras, herramienta de nota técnica), que resalta la sección activa al hacer scroll (scrollspy) y se refleja en el breadcrumb superior. En móvil se convierte en un panel deslizante.
+- **Buscador en vivo** (`/` para abrir) que filtra por ponente, cargo, tema, cifra, sesión y eje, con navegación por teclado (`↑`/`↓`/`Enter`) y resultado con salto directo a la sección.
+- **Atajos de teclado** documentados en un panel de ayuda (`?`): `/` buscar, `Esc` cerrar, `↑`/`↓` navegar resultados, `Enter` ir al resultado.
+- **Modo de lectura enfocada** (oculta índice, breadcrumb y chrome secundario) y **botón "volver arriba"**.
+- **Accesibilidad WCAG AA**: foco visible en todo elemento interactivo, `role="region"`/`aria-labelledby` en cada sección del acordeón, tablas con `<caption>` accesible, nodos de los diagramas SVG operables por teclado (Tab + Enter/Espacio), y una vista alterna "Ver como lista" para cada diagrama (el diagnóstico causal y el mapa mental de notas técnicas) como equivalente textual completo.
+- **Trazabilidad de datos**: cada cifra clave y cada nodo del diagrama causal lleva una etiqueta de confiabilidad (*Declarado en escenario* / *Nota del autor*), un **Panel de fuentes** agrega todas las URLs públicas citadas, y un **historial de cambios** (changelog) con fecha real de cada publicación.
+- **Exportación por sección**: cada una de las 10 secciones puede exportarse a **Markdown** (descarga `.md`) o **imprimirse a PDF** (usa el diálogo de impresión del navegador con una hoja de estilos dedicada — sin dependencias ni librerías).
+- **Calculadora de brecha SOAT/CUPS** en Cifras clave, basada en el ratio agregado declarado en el congreso (no en una consulta código por código, que el congreso no publicó).
+
 ## Stack técnico
 
-HTML/CSS/JS sin build step (fácil de servir con GitHub Pages), siguiendo el mismo sistema de diseño que [gobernanza-salud-publica-colombia](https://github.com/fadavilar/gobernanza-salud-publica-colombia) (tema claro/oscuro persistente, acordeones, tablas filtrables con exportación a CSV).
+HTML/CSS/JS sin build step ni frameworks (fácil de servir con GitHub Pages), siguiendo el mismo sistema de diseño que [gobernanza-salud-publica-colombia](https://github.com/fadavilar/gobernanza-salud-publica-colombia) (tema claro/oscuro persistente, acordeones, tablas filtrables con exportación a CSV/Markdown).
 
-- `index.html` — estructura y metadatos.
-- `css/style.css` — sistema de diseño (tokens de color claro/oscuro, acordeones, responsive).
-- `js/data.js` — todo el contenido editorial (diagnóstico causal, ejes temáticos, cifras clave, agenda, recomendaciones, lagunas, lectura, metodología, fotos de ponentes).
-- `js/app.js` — renderizado, tema claro/oscuro persistente, acordeones (expandir/colapsar todo), diagrama causal SVG interactivo, tablas filtrables y avatares de ponentes.
+- `index.html` — estructura, shell de dos columnas (índice + contenido), buscador y paneles de ayuda/fuentes.
+- `css/style.css` — sistema de diseño (tokens de color claro/oscuro, acordeones, sidebar, buscador, responsive, impresión).
+- `js/data.js` — todo el contenido editorial (diagnóstico causal, ejes temáticos, cifras clave, agenda, recomendaciones, lagunas, nota técnica, lectura, metodología, fotos de ponentes, changelog, etiquetas de confiabilidad).
+- `js/app.js` — renderizado, tema claro/oscuro persistente, acordeones, diagramas SVG interactivos y accesibles, índice/scrollspy, buscador, atajos de teclado, exportación a Markdown/PDF, calculadora.
 - `img/speakers/` — retratos oficiales de funcionarios públicos (ver "Fotos de ponentes" abajo).
 - `downloads/nota-tecnica-ips-eps-plantilla.docx` — plantilla descargable de nota técnica de proveedor a EPS (sección "Nota técnica").
 
 Para editar contenido, generalmente basta con modificar `js/data.js`; el resto se renderiza automáticamente.
+
+### Alcance de esta ronda (Fase 1 de la mejora en 5 frentes)
+
+Esta actualización cubre las funcionalidades de **alta prioridad** pedidas por el autor: navegación, buscador, accesibilidad, trazabilidad de fuentes y exportación. Quedan pendientes para una siguiente ronda (ya diseñadas, no implementadas): reorganización del contenido por conceptos con matriz de relaciones, comparadores adicionales, más plantillas descargables y un buscador de cifras por rango (prioridad media); y un mapa tipo grafo/constelación, modo resumen de una página y autodiagnóstico para IPS/aseguradores (prioridad baja). No se construyeron comparadores ni calculadoras que habrían requerido inventar datos o metodologías que el congreso no proporcionó (ver Metodología y fuentes en la app).
 
 ## Autor
 

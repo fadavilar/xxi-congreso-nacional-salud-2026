@@ -72,6 +72,21 @@
     if(l.indexOf("baja")>=0) return "level-baja";
     return "level-por";
   }
+  /* ---------------- Confidence tags (trazabilidad de datos) ----------------
+     4 estados: verificado (URL pública real) · escenario (declarado por el
+     ponente, sin URL) · nota-autor (síntesis/interpretación propia) ·
+     pendiente (dato a verificar más adelante). */
+  const CONFIDENCE_LABEL = {
+    verificado: "Verificado en fuente pública",
+    escenario: "Declarado en escenario",
+    "nota-autor": "Nota del autor",
+    pendiente: "Pendiente de verificación",
+  };
+  function confidenceTag(level){
+    if(!level) return null;
+    const label = CONFIDENCE_LABEL[level] || level;
+    return el("span",{class:"confidence-tag confidence-"+level, title:"Confiabilidad del dato: "+label},[label]);
+  }
   /* ---------------- Speaker avatars ----------------
      Real photo (from DATA.speakerPhotos, official-source only) when
      available, otherwise a generated initials circle — never a scraped
@@ -108,12 +123,15 @@
   const SECTIONS = [
     { id:"resumen", num:"01", title:"Resumen ejecutivo", sub:"El congreso en 60 segundos", open:true },
     { id:"diagnostico", num:"02", title:"Diagnóstico causal", sub:"Modelo de dinámica de sistemas — retoma la revisión de gobernanza del autor", open:false },
-    { id:"ejes", num:"03", title:"Ejes temáticos del congreso", sub:"Financiamiento, tarifas, regulación, epidemiología, prestadores e IA", open:false },
-    { id:"cifras", num:"04", title:"Cifras clave", sub:"Los números que más se citaron en el escenario", open:false },
+    { id:"ejes", num:"03", title:"Ejes temáticos del congreso", sub:"Financiamiento, tarifas, regulación, epidemiología, prestadores e IA", open:false,
+      subs: DATA.categories.map(c=>({ id:"eje-"+c.id, label:"Eje "+c.id+" — "+c.title })) },
+    { id:"cifras", num:"04", title:"Cifras clave", sub:"Los números que más se citaron en el escenario", open:false,
+      subs: DATA.keyFigureGroups.map((g,i)=>({ id:"cifras-grupo-"+i, label:g.title })) },
     { id:"agenda", num:"05", title:"Agenda completa", sub:"22 sesiones, dos jornadas, con ponente y cargo", open:false },
     { id:"recomendaciones", num:"06", title:"Recomendaciones", sub:"Síntesis propia — ancladas en el diagnóstico causal", open:false },
     { id:"lagunas", num:"07", title:"Lagunas de evidencia", sub:"Qué no se presentó o quedó sin resolver", open:false },
-    { id:"nota-tecnica", num:"08", title:"Nota técnica", sub:"De la intervención a la implementación en IPS y otros prestadores", open:false },
+    { id:"nota-tecnica", num:"08", title:"Nota técnica", sub:"De la intervención a la implementación en IPS y otros prestadores", open:false,
+      subs: [{ id:"nota-tecnica-herramienta", label:"Herramienta práctica: mapa mental + plantilla" }] },
     { id:"lectura", num:"09", title:"Mi lectura", sub:"Síntesis y reflexión propia del autor", open:false },
     { id:"metodologia", num:"10", title:"Metodología y fuentes", sub:"Cómo se elaboró esta síntesis, y sus límites", open:false },
   ];
@@ -122,13 +140,13 @@
     const wrap = document.getElementById("accordion");
     SECTIONS.forEach(s=>{
       const item = el("div", {class:"acc-item"+(s.open?" open":""), id:"sec-"+s.id});
-      const header = el("button", {class:"acc-header","aria-expanded": s.open?"true":"false"}, [
+      const header = el("button", {class:"acc-header", id:"hdr-"+s.id, "aria-expanded": s.open?"true":"false", "aria-controls":"body-"+s.id}, [
         el("span",{class:"num"},[s.num]),
         el("span",{class:"titles"},[ el("h3",{},[s.title]), el("span",{class:"sub"},[s.sub]) ]),
-        el("svg",{class:"chev",viewBox:"0 0 24 24",fill:"none",html:'<path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>'}),
+        el("svg",{class:"chev",viewBox:"0 0 24 24",fill:"none","aria-hidden":"true",html:'<path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>'}),
       ]);
       const panel = el("div",{class:"acc-panel"});
-      const inner = el("div",{},[ el("div",{class:"acc-body", id:"body-"+s.id}) ]);
+      const inner = el("div",{},[ el("div",{class:"acc-body", id:"body-"+s.id, role:"region", "aria-labelledby":"hdr-"+s.id}) ]);
       panel.appendChild(inner);
       header.addEventListener("click", ()=> toggleSection(item, header));
       item.appendChild(header);
@@ -146,6 +164,12 @@
       const header = item.querySelector(".acc-header");
       toggleSection(item, header, open);
     });
+  }
+  function openSection(sectionId){
+    const item = document.getElementById("sec-"+sectionId);
+    if(!item) return;
+    const header = item.querySelector(".acc-header");
+    toggleSection(item, header, true);
   }
 
   /* ============================================================
@@ -207,7 +231,7 @@
       const rw = DATA.meta.relatedWork;
       body.appendChild(el("div",{class:"related-work-box"},[
         el("h4",{},["Análisis relacionado del autor"]),
-        el("a",{href:rw.url, target:"_blank", rel:"noopener", style:"font-weight:700"},[rw.title]),
+        el("a",{href:rw.url, target:"_blank", rel:"noopener noreferrer", style:"font-weight:700"},[rw.title]),
         el("p",{style:"margin-top:4px"},[rw.text]),
       ]));
     }
@@ -232,6 +256,7 @@
     tooltipEl.addEventListener("mouseleave", scheduleHideTooltip);
     wrap.appendChild(tooltipEl);
     body.appendChild(wrap);
+    addAccessibleListToggle(body, wrap, buildCausalAccessibleList());
 
     body.appendChild(el("div",{class:"loop-legend"},[
       el("span",{class:"swatch"},[el("span",{class:"sw sw-r"}), "R1 · bucle de refuerzo (crisis de caja)"]),
@@ -362,6 +387,36 @@
     svg.addEventListener("mouseleave", scheduleHideTooltip);
     return svg;
   }
+  function buildCausalAccessibleList(){
+    const ul = el("ul",{class:"a11y-list"});
+    DATA.causalLoop.loops.forEach(loop=>{
+      ul.appendChild(el("li",{},[
+        el("div",{class:"a11y-title"},[loop.title]),
+        el("div",{},[loop.text]),
+      ]));
+    });
+    DATA.causalLoop.nodes.forEach(node=>{
+      const li = el("li",{},[
+        el("div",{class:"a11y-title"},["Nodo "+node.id+": "+node.label]),
+      ]);
+      if(node.actors) li.appendChild(el("div",{class:"a11y-meta"},["Actores: "+node.actors]));
+      if(node.sessions && node.sessions.length){
+        li.appendChild(el("div",{class:"a11y-meta"},[
+          "Respaldado por: " + node.sessions.map(n=>{ const s=sessionById(n); return s?`"${s.tag}" (${s.speaker})`:`sesión ${n}`; }).join("; ")
+        ]));
+      }
+      if(node.confidence) li.appendChild(confidenceTag(node.confidence));
+      ul.appendChild(li);
+    });
+    DATA.causalLoop.edges.forEach(e=>{
+      const from = DATA.causalLoop.nodes.find(n=>n.id===e.from);
+      const to = DATA.causalLoop.nodes.find(n=>n.id===e.to);
+      ul.appendChild(el("li",{},[
+        el("div",{},[`${from.label} → ${to.label}`, el("span",{class:"chip-muted chip", style:"margin-left:8px"},[e.polarity==="-"?"sentido opuesto (−)":"mismo sentido (+)"])]),
+      ]));
+    });
+    return ul;
+  }
   function wrapLabel(text, maxChars){
     const words = text.split(" ");
     const lines = []; let cur = "";
@@ -386,6 +441,9 @@
     } else {
       html += `<p style="color:var(--text-muted)">Nodo de enlace en la narrativa causal (síntesis del autor); no corresponde a una cifra citada individualmente.</p>`;
     }
+    if(node.confidence){
+      html += `<p style="margin-top:4px"><span class="confidence-tag confidence-${escapeXML(node.confidence)}">${escapeXML(CONFIDENCE_LABEL[node.confidence]||node.confidence)}</span></p>`;
+    }
     return html;
   }
   function loopTooltipHTML(loop){
@@ -396,6 +454,14 @@
     }
     return html;
   }
+  // Makes an SVG <g> node keyboard-operable (Tab to focus, Enter/Space to
+  // trigger the same tooltip a mouse hover/click would show) — required for
+  // WCAG 2.1.1 (keyboard) since these custom shapes have no native semantics.
+  function makeSvgFocusable(gEl, label){
+    gEl.setAttribute("tabindex","0");
+    gEl.setAttribute("role","button");
+    gEl.setAttribute("aria-label", label);
+  }
   function attachNodeTooltip(gEl, node){
     const show = ()=>{
       cancelHideTooltip();
@@ -403,8 +469,11 @@
       gEl.classList.add("active");
       showDiagramTooltip(gEl, nodeTooltipHTML(node));
     };
+    makeSvgFocusable(gEl, node.label);
     gEl.addEventListener("mouseenter", show);
+    gEl.addEventListener("focus", show);
     gEl.addEventListener("click", (e)=>{ e.stopPropagation(); show(); });
+    gEl.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); show(); } });
   }
   function attachLoopTooltip(gEl, loop){
     const show = ()=>{
@@ -413,8 +482,11 @@
       gEl.classList.add("active");
       showDiagramTooltip(gEl, loopTooltipHTML(loop));
     };
+    makeSvgFocusable(gEl, loop.title);
     gEl.addEventListener("mouseenter", show);
+    gEl.addEventListener("focus", show);
     gEl.addEventListener("click", (e)=>{ e.stopPropagation(); show(); });
+    gEl.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); show(); } });
   }
   function showDiagramTooltip(targetEl, html){
     const wrap = targetEl.closest(".diagram-wrap");
@@ -449,6 +521,23 @@
   function cancelHideTooltip(){
     clearTimeout(tooltipHideTimer);
   }
+  // Text-equivalent view for a mouse/keyboard SVG diagram — some screen
+  // readers handle custom interactive SVG poorly regardless of ARIA
+  // labeling, so every diagram also ships a plain accessible list of the
+  // same information, toggleable in place.
+  function addAccessibleListToggle(body, wrap, listEl){
+    listEl.hidden = true;
+    const btn = el("button",{class:"btn", type:"button", "aria-pressed":"false"},["Ver como lista (accesible)"]);
+    btn.addEventListener("click", ()=>{
+      const showingList = listEl.hidden;
+      listEl.hidden = !showingList;
+      wrap.hidden = showingList;
+      btn.setAttribute("aria-pressed", showingList?"true":"false");
+      btn.textContent = showingList ? "Ver como diagrama" : "Ver como lista (accesible)";
+    });
+    body.appendChild(el("div",{class:"a11y-list-toggle"},[btn]));
+    body.appendChild(listEl);
+  }
 
   /* ============================================================
      RENDER: 02 Ejes temáticos
@@ -459,7 +548,7 @@
       "Clasificación editorial propia del autor de los puntos más relevantes del congreso, organizada por los grandes temas que atravesaron la agenda. Cada hallazgo cita, entre comillas, la sesión de la agenda que lo respalda — pasa el cursor sobre la cita para ver el número de sesión y el ponente."
     ]));
     DATA.categories.forEach(cat=>{
-      const block = el("div",{class:"category-block "+cat.color});
+      const block = el("div",{class:"category-block "+cat.color, id:"eje-"+cat.id});
       block.appendChild(el("h4",{},[
         el("span",{class:"chip "+cat.color, style:"margin-right:8px"},["Eje "+cat.id]),
         cat.title
@@ -486,7 +575,7 @@
       const line = el("div",{class:"source-line"});
       line.appendChild(el("span",{class:"source-tag"},["Fuente"+(list.length>1?" "+(i+1):"")+": "]));
       if(s.url){
-        line.appendChild(el("a",{href:s.url, target:"_blank", rel:"noopener"},[s.label]));
+        line.appendChild(el("a",{href:s.url, target:"_blank", rel:"noopener noreferrer"},[s.label]));
       } else {
         line.appendChild(el("span",{},[s.label]));
         line.appendChild(el("span",{class:"chip-muted chip", style:"margin-left:6px"},["sin URL pública"]));
@@ -519,6 +608,7 @@
       block.appendChild(el("div",{class:"indicator-head"},[
         el("h4",{},[ind.title]),
         ind.unit ? el("span",{class:"unit"},[ind.unit]) : null,
+        confidenceTag(ind.confidence),
       ]));
       block.appendChild(el("div",{class:"indicator-linklet"},[ind.loopLink]));
       block.appendChild(el("div",{class:"comparison-row"},[
@@ -537,15 +627,17 @@
       body.appendChild(block);
     });
 
-    DATA.keyFigureGroups.forEach(group=>{
-      body.appendChild(el("h4",{style:"font-size:.86rem;margin:22px 0 10px"},[group.title]));
+    DATA.keyFigureGroups.forEach((group,gi)=>{
+      body.appendChild(el("h4",{id:"cifras-grupo-"+gi, style:"font-size:.86rem;margin:22px 0 10px"},[group.title]));
       const grid = el("div",{class:"stat-grid", style:"margin-top:0"});
       group.figures.forEach(f=>{
-        grid.appendChild(el("div",{class:"stat-card", title: "Sesión "+f.session+" — "+(sessionById(f.session)?sessionById(f.session).speaker:"")},[
+        const card = el("div",{class:"stat-card", title: "Sesión "+f.session+" — "+(sessionById(f.session)?sessionById(f.session).speaker:"")},[
           el("div",{class:"value"},[f.value]),
           el("div",{class:"label"},[f.label]),
           el("div",{class:"detail"},[f.detail]),
-        ]));
+        ]);
+        card.appendChild(confidenceTag("escenario"));
+        grid.appendChild(card);
       });
       body.appendChild(grid);
     });
@@ -555,6 +647,42 @@
     body.appendChild(el("div",{class:"data-table-actions", style:"margin-top:16px"},[
       makeDownloadLink("cifras_clave.csv", ["Eje","Valor","Indicador","Detalle / fuente"], allFigures)
     ]));
+
+    renderTariffGapCalculator(body);
+  }
+  function renderTariffGapCalculator(body){
+    const tool = DATA.tools && DATA.tools.tariffGapCalculator;
+    if(!tool) return;
+    const box = el("div",{class:"indicator-block calculator-box"});
+    box.appendChild(el("div",{class:"indicator-head"},[
+      el("h4",{},[tool.title]),
+      confidenceTag(tool.confidence),
+    ]));
+    box.appendChild(el("p",{style:"font-size:.85rem;color:var(--text-muted)"},[tool.intro]));
+
+    const row = el("div",{class:"calc-row"});
+    const label = el("label",{for:"calc-proc-count"},["¿Cuántos procedimientos frecuentes maneja?"]);
+    const input = el("input",{type:"number", id:"calc-proc-count", min:"1", step:"1", value:"100", class:"calc-input"});
+    const output = el("div",{class:"calc-output"});
+    function update(){
+      const n = Math.max(0, parseInt(input.value,10) || 0);
+      const ratio = tool.soatCodes / tool.cupsTotal;
+      const outside = Math.round(n * (1 - ratio));
+      output.innerHTML = "";
+      output.appendChild(el("div",{class:"calc-result"},[
+        el("span",{class:"calc-result-value"},[String(outside)]),
+        el("span",{},[" de "+n+" procedimientos podrían caer, en promedio, fuera de la cobertura SOAT (~"+(Math.round((1-ratio)*1000)/10)+"%)."]),
+      ]));
+    }
+    input.addEventListener("input", update);
+    row.appendChild(label);
+    row.appendChild(input);
+    box.appendChild(row);
+    box.appendChild(output);
+    update();
+    box.appendChild(el("p",{class:"calc-disclaimer"},[tool.disclaimer]));
+    box.appendChild(el("p",{class:"indicator-source"},["Fuente: sesión "+tool.session+" — "+(sessionById(tool.session)?sessionById(tool.session).speaker:"")]));
+    body.appendChild(box);
   }
 
   /* ============================================================
@@ -584,6 +712,7 @@
 
     const tableWrap = el("div",{class:"table-wrap"});
     const table = el("table",{class:"studies", id:"agenda-table"},[
+      el("caption",{class:"sr-only"},["Agenda completa del XXI Congreso Nacional de Salud, 22 sesiones con día, hora, título, ponente y cargo"]),
       el("thead",{},[ el("tr",{},[
         el("th",{},["#"]), el("th",{},["Día"]), el("th",{},["Hora"]),
         el("th",{},["Sesión"]), el("th",{},["Ponente"]), el("th",{},["Cargo"]),
@@ -626,6 +755,12 @@
       ]));
       card.appendChild(el("div",{class:"rec-leverage"},["Punto de apalancamiento: "+rec.leverage]));
       card.appendChild(el("p",{style:"margin:0 0 6px"},[rec.text]));
+      if(rec.owner || rec.nextStep){
+        card.appendChild(el("div",{class:"rec-board-row"},[
+          rec.owner ? el("div",{class:"rec-board-cell"},[ el("div",{class:"k"},["Responsable sugerido"]), rec.owner ]) : null,
+          rec.nextStep ? el("div",{class:"rec-board-cell"},[ el("div",{class:"k"},["Próximo paso"]), rec.nextStep ]) : null,
+        ]));
+      }
       const outWrap = el("div",{class:"outcomes"});
       rec.outcomes.forEach(o=>{
         outWrap.appendChild(el("div",{class:"outcome"},[
@@ -668,6 +803,7 @@
     body.appendChild(el("h4",{style:"font-size:.86rem;margin-top:18px"},["2. La brecha identificada"]));
     const tableWrap = el("div",{class:"table-wrap"});
     const table = el("table",{class:"data-table gap-table"},[
+      el("caption",{class:"sr-only"},["Tabla comparativa: intervenciones anunciadas frente a evidencia de implementación en IPS"]),
       el("thead",{},[ el("tr",{}, t.gapTable.columns.map(c=>el("th",{},[c]))) ]),
       el("tbody",{}, t.gapTable.rows.map(r=> el("tr",{}, r.map(cell=> el("td",{style:"white-space:normal;min-width:260px"},[cell]))))),
     ]);
@@ -708,7 +844,7 @@
     // 7. Herramienta práctica — mapa mental + plantilla, anidados con la sesión 22
     const pt = t.providerNoteTool;
     if(pt){
-      body.appendChild(el("h4",{style:"font-size:.86rem;margin-top:26px"},["7. Herramienta práctica: nota técnica de un prestador a una EPS"]));
+      body.appendChild(el("h4",{id:"nota-tecnica-herramienta", style:"font-size:.86rem;margin-top:26px"},["7. Herramienta práctica: nota técnica de un prestador a una EPS"]));
       body.appendChild(el("p",{},[pt.intro]));
 
       const wrap = el("div",{class:"diagram-wrap"});
@@ -718,6 +854,20 @@
       tooltipEl.addEventListener("mouseleave", scheduleHideTooltip);
       wrap.appendChild(tooltipEl);
       body.appendChild(wrap);
+      const mmList = el("ul",{class:"a11y-list"});
+      pt.branches.forEach(b=>{
+        const li = el("li",{},[ el("div",{class:"a11y-title"},[b.label]) ]);
+        const itemsList = el("ul",{style:"margin:4px 0 0;padding-left:18px"});
+        b.items.forEach(it=> itemsList.appendChild(el("li",{style:"font-size:.82rem"},[it])));
+        li.appendChild(itemsList);
+        if(b.sessions && b.sessions.length){
+          li.appendChild(el("div",{class:"a11y-meta"},[
+            b.sessions.map(n=>{ const s=sessionById(n); return s?`"${s.tag}"`:`sesión ${n}`; }).join(" · ")
+          ]));
+        }
+        mmList.appendChild(li);
+      });
+      addAccessibleListToggle(body, wrap, mmList);
       body.appendChild(el("p",{class:"diagram-hint"},["Toca o pasa el cursor sobre cada rama para ver los elementos que la componen."]));
 
       if(pt.template){
@@ -814,8 +964,11 @@
       gEl.classList.add("active");
       showDiagramTooltip(gEl, branchTooltipHTML(branch));
     };
+    makeSvgFocusable(gEl, branch.label);
     gEl.addEventListener("mouseenter", show);
+    gEl.addEventListener("focus", show);
     gEl.addEventListener("click", (e)=>{ e.stopPropagation(); show(); });
+    gEl.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); show(); } });
   }
 
   /* ============================================================
@@ -849,6 +1002,405 @@
   }
 
   /* ============================================================
+     SIDEBAR TOC + SCROLLSPY + BREADCRUMB
+     ============================================================ */
+  function scrollToId(id){
+    const target = document.getElementById(id);
+    if(target) target.scrollIntoView({behavior:"smooth", block:"start"});
+  }
+  function renderSidebarTOC(){
+    const nav = document.getElementById("toc");
+    SECTIONS.forEach(s=>{
+      const a = el("a",{class:"toc-link", href:"#sec-"+s.id, "data-target":"sec-"+s.id},[
+        el("span",{class:"toc-num"},[s.num]), s.title
+      ]);
+      a.addEventListener("click",(e)=>{
+        e.preventDefault();
+        openSection(s.id);
+        scrollToId("sec-"+s.id);
+        closeMobileSidebar();
+      });
+      nav.appendChild(a);
+      (s.subs||[]).forEach(sub=>{
+        const sa = el("a",{class:"toc-link sub", href:"#"+sub.id, "data-target":sub.id},[sub.label]);
+        sa.addEventListener("click",(e)=>{
+          e.preventDefault();
+          openSection(s.id);
+          scrollToId(sub.id);
+          closeMobileSidebar();
+        });
+        nav.appendChild(sa);
+      });
+    });
+  }
+  function initScrollspy(){
+    const landmarks = [];
+    SECTIONS.forEach(s=>{
+      landmarks.push({ tocKey:"sec-"+s.id, el: document.getElementById("hdr-"+s.id), sectionId:s.id, subId:null, label:s.title });
+      (s.subs||[]).forEach(sub=>{
+        const e = document.getElementById(sub.id);
+        if(e) landmarks.push({ tocKey:sub.id, el:e, sectionId:s.id, subId:sub.id, label:sub.label });
+      });
+    });
+    function update(){
+      // Collapsed accordion panels use grid-template-rows:0fr + overflow:hidden
+      // to hide content: the panel's own box is 0-height (nothing paints), but
+      // elements inside still carry their "phantom" layout position as if the
+      // panel were fully expanded. Skip sub-landmarks of collapsed sections so
+      // that phantom geometry never breaks the (otherwise monotonic) scan —
+      // only top-level headers are guaranteed real/visible regardless of state.
+      const offset = 100;
+      let current = null;
+      for(const lm of landmarks){
+        if(!lm.el) continue;
+        if(lm.subId){
+          const parentItem = document.getElementById("sec-"+lm.sectionId);
+          if(!parentItem || !parentItem.classList.contains("open")) continue;
+        }
+        if(lm.el.getBoundingClientRect().top - offset <= 0) current = lm;
+      }
+      setActiveTOC(current || landmarks[0]);
+    }
+    let ticking = false;
+    window.addEventListener("scroll", ()=>{
+      if(!ticking){ requestAnimationFrame(()=>{ update(); ticking=false; }); ticking=true; }
+    }, {passive:true});
+    update();
+  }
+  function setActiveTOC(current){
+    document.querySelectorAll(".toc-link").forEach(a=>{
+      a.classList.toggle("active", a.getAttribute("data-target") === current.tocKey);
+    });
+    updateBreadcrumb(current);
+  }
+  function updateBreadcrumb(current){
+    const bc = document.getElementById("breadcrumb");
+    if(!bc) return;
+    const section = SECTIONS.find(s=>s.id===current.sectionId);
+    if(!section) return;
+    bc.innerHTML = "";
+    bc.appendChild(el("a",{href:"#main"},["Inicio"]));
+    bc.appendChild(el("span",{class:"sep","aria-hidden":"true"},["›"]));
+    if(current.subId){
+      const secLink = el("a",{href:"#sec-"+current.sectionId},[section.title]);
+      secLink.addEventListener("click",(e)=>{ e.preventDefault(); openSection(current.sectionId); scrollToId("sec-"+current.sectionId); });
+      bc.appendChild(secLink);
+      bc.appendChild(el("span",{class:"sep","aria-hidden":"true"},["›"]));
+      bc.appendChild(el("span",{class:"current"},[current.label]));
+    } else {
+      bc.appendChild(el("span",{class:"current"},[section.title]));
+    }
+  }
+
+  /* ============================================================
+     MOBILE SIDEBAR DRAWER
+     ============================================================ */
+  function initMobileSidebar(){
+    const toggle = document.getElementById("toc-toggle");
+    const sidebar = document.getElementById("sidebar");
+    const scrim = document.getElementById("sidebar-scrim");
+    function openDrawer(){
+      sidebar.classList.add("open"); scrim.hidden = false;
+      toggle.setAttribute("aria-expanded","true");
+    }
+    toggle.addEventListener("click", ()=> sidebar.classList.contains("open") ? closeMobileSidebar() : openDrawer());
+    scrim.addEventListener("click", closeMobileSidebar);
+  }
+  function closeMobileSidebar(){
+    const sidebar = document.getElementById("sidebar");
+    const scrim = document.getElementById("sidebar-scrim");
+    const toggle = document.getElementById("toc-toggle");
+    if(!sidebar) return;
+    sidebar.classList.remove("open");
+    scrim.hidden = true;
+    toggle.setAttribute("aria-expanded","false");
+  }
+
+  /* ============================================================
+     LIVE SEARCH
+     ============================================================ */
+  let SEARCH_INDEX = [];
+  let searchResults = [];
+  let searchActiveIndex = -1;
+  function buildSearchIndex(){
+    const idx = [];
+    DATA.agenda.forEach(a=>{
+      idx.push({ type:"Ponente", label:a.speaker, detail:a.role+" · sesión "+a.n+" · "+a.title, sectionId:"agenda", anchorId:"sec-agenda" });
+      idx.push({ type:"Sesión "+a.n, label:a.title, detail:a.speaker+" — "+a.role, sectionId:"agenda", anchorId:"sec-agenda" });
+    });
+    DATA.categories.forEach(cat=>{
+      cat.codes.forEach(code=>{
+        idx.push({ type:"Eje "+cat.id, label: code.text.length>90? code.text.slice(0,90)+"…" : code.text, detail: cat.title, sectionId:"ejes", anchorId:"eje-"+cat.id });
+      });
+    });
+    DATA.keyFigureGroups.forEach((g,gi)=>{
+      g.figures.forEach(f=>{
+        idx.push({ type:"Cifra", label: f.value+" — "+f.label, detail: f.detail, sectionId:"cifras", anchorId:"cifras-grupo-"+gi });
+      });
+    });
+    DATA.comparisonIndicators.forEach(ci=>{
+      idx.push({ type:"Cifra", label: ci.title, detail: ci.before.value+" → "+ci.after.value, sectionId:"cifras", anchorId:"sec-cifras" });
+    });
+    DATA.recommendations.forEach(r=>{
+      idx.push({ type:"Recomendación", label:r.title, detail:r.leverage, sectionId:"recomendaciones", anchorId:"sec-recomendaciones" });
+    });
+    DATA.gaps.forEach(g=>{
+      idx.push({ type:"Laguna", label: g.length>90? g.slice(0,90)+"…" : g, detail:"Lagunas de evidencia", sectionId:"lagunas", anchorId:"sec-lagunas" });
+    });
+    idx.push({ type:"Sección", label:"Diagnóstico causal", detail:"Bucles R1 (crisis de caja) y B1 (trazabilidad y auditoría)", sectionId:"diagnostico", anchorId:"sec-diagnostico" });
+    idx.push({ type:"Sección", label:"Nota técnica", detail:"Intervención vs. implementación en IPS", sectionId:"nota-tecnica", anchorId:"sec-nota-tecnica" });
+    idx.push({ type:"Herramienta", label:"Mapa mental: nota técnica IPS → EPS", detail:"Mapa mental y plantilla descargable", sectionId:"nota-tecnica", anchorId:"nota-tecnica-herramienta" });
+    idx.push({ type:"Herramienta", label:"Calculadora: brecha SOAT/CUPS", detail:"Cifras clave", sectionId:"cifras", anchorId:"sec-cifras" });
+    return idx;
+  }
+  function openSearch(){
+    const panel = document.getElementById("search-panel");
+    const input = document.getElementById("search-input");
+    panel.hidden = false;
+    input.value = "";
+    document.getElementById("search-results").innerHTML = "";
+    searchResults = []; searchActiveIndex = -1;
+    setTimeout(()=> input.focus(), 10);
+  }
+  function closeSearch(){
+    const panel = document.getElementById("search-panel");
+    if(panel.hidden) return;
+    panel.hidden = true;
+    document.getElementById("search-trigger").focus();
+  }
+  function isSearchOpen(){ return !document.getElementById("search-panel").hidden; }
+  function runSearch(q){
+    const resultsEl = document.getElementById("search-results");
+    const input = document.getElementById("search-input");
+    resultsEl.innerHTML = "";
+    searchActiveIndex = -1;
+    const query = q.trim().toLowerCase();
+    if(!query){ searchResults = []; input.setAttribute("aria-expanded","false"); return; }
+    searchResults = SEARCH_INDEX.filter(e=>
+      (e.label && e.label.toLowerCase().indexOf(query)>=0) ||
+      (e.detail && e.detail.toLowerCase().indexOf(query)>=0) ||
+      (e.type && e.type.toLowerCase().indexOf(query)>=0)
+    ).slice(0,30);
+    input.setAttribute("aria-expanded", searchResults.length ? "true":"false");
+    if(!searchResults.length){
+      resultsEl.appendChild(el("li",{class:"search-empty"},['Sin resultados para "'+q+'"']));
+      return;
+    }
+    searchResults.forEach((r,i)=>{
+      const li = el("li",{role:"presentation"});
+      const a = el("a",{class:"search-result", href:"#", role:"option", id:"sr-"+i},[
+        el("div",{class:"sr-type"},[r.type]),
+        el("div",{class:"sr-label"},[r.label]),
+        el("div",{class:"sr-detail"},[r.detail||""]),
+      ]);
+      a.addEventListener("click",(e)=>{ e.preventDefault(); goToSearchResult(r); });
+      li.appendChild(a);
+      resultsEl.appendChild(li);
+    });
+  }
+  function goToSearchResult(r){
+    closeSearch();
+    openSection(r.sectionId);
+    setTimeout(()=> scrollToId(r.anchorId), 60);
+  }
+  function highlightActiveResult(){
+    const items = document.querySelectorAll(".search-result");
+    items.forEach((a,i)=> a.classList.toggle("active", i===searchActiveIndex));
+    const active = items[searchActiveIndex];
+    if(active) active.scrollIntoView({block:"nearest"});
+  }
+  function initSearch(){
+    SEARCH_INDEX = buildSearchIndex();
+    const trigger = document.getElementById("search-trigger");
+    const panel = document.getElementById("search-panel");
+    const input = document.getElementById("search-input");
+    const closeBtn = document.getElementById("search-close");
+    trigger.addEventListener("click", openSearch);
+    closeBtn.addEventListener("click", closeSearch);
+    panel.addEventListener("mousedown",(e)=>{ if(e.target===panel) closeSearch(); });
+    input.addEventListener("input", ()=> runSearch(input.value));
+    input.addEventListener("keydown",(e)=>{
+      if(e.key==="ArrowDown"){ e.preventDefault(); if(searchResults.length){ searchActiveIndex = Math.min(searchActiveIndex+1, searchResults.length-1); highlightActiveResult(); } }
+      else if(e.key==="ArrowUp"){ e.preventDefault(); if(searchResults.length){ searchActiveIndex = Math.max(searchActiveIndex-1, 0); highlightActiveResult(); } }
+      else if(e.key==="Enter"){ e.preventDefault();
+        if(searchActiveIndex>=0 && searchResults[searchActiveIndex]) goToSearchResult(searchResults[searchActiveIndex]);
+        else if(searchResults.length) goToSearchResult(searchResults[0]);
+      }
+    });
+  }
+
+  /* ============================================================
+     KEYBOARD SHORTCUTS + HELP PANEL
+     ============================================================ */
+  function isShortcutsOpen(){ return !document.getElementById("shortcuts-panel").hidden; }
+  function openShortcuts(){
+    document.getElementById("shortcuts-panel").hidden = false;
+    document.getElementById("shortcuts-close").focus();
+  }
+  function closeShortcuts(){
+    document.getElementById("shortcuts-panel").hidden = true;
+    document.getElementById("help-toggle").focus();
+  }
+  function initShortcutsPanel(){
+    document.getElementById("help-toggle").addEventListener("click", ()=> isShortcutsOpen() ? closeShortcuts() : openShortcuts());
+    document.getElementById("shortcuts-close").addEventListener("click", closeShortcuts);
+    document.getElementById("shortcuts-panel").addEventListener("mousedown",(e)=>{
+      if(e.target.id==="shortcuts-panel") closeShortcuts();
+    });
+  }
+  function initKeyboardShortcuts(){
+    document.addEventListener("keydown",(e)=>{
+      const tag = (e.target && e.target.tagName || "").toLowerCase();
+      const typing = tag==="input" || tag==="textarea" || (e.target && e.target.isContentEditable);
+      if(e.key==="/" && !typing){ e.preventDefault(); openSearch(); return; }
+      if(e.key==="?" && !typing){ e.preventDefault(); isShortcutsOpen() ? closeShortcuts() : openShortcuts(); return; }
+      if(e.key==="Escape"){
+        if(isSearchOpen()) closeSearch();
+        else if(isShortcutsOpen()) closeShortcuts();
+        else { const sb = document.getElementById("sidebar"); if(sb && sb.classList.contains("open")) closeMobileSidebar(); }
+      }
+    });
+  }
+
+  /* ============================================================
+     FOCUS MODE / SCROLL TO TOP
+     ============================================================ */
+  function initFocusMode(){
+    const btn = document.getElementById("focus-toggle");
+    btn.addEventListener("click", ()=>{
+      const on = !document.body.classList.contains("focus-mode");
+      document.body.classList.toggle("focus-mode", on);
+      btn.setAttribute("aria-pressed", on?"true":"false");
+    });
+  }
+  function initScrollTop(){
+    const btn = document.getElementById("scroll-top");
+    window.addEventListener("scroll", ()=>{ btn.hidden = window.scrollY < 600; }, {passive:true});
+    btn.addEventListener("click", ()=> window.scrollTo({top:0, behavior:"smooth"}));
+  }
+
+  /* ============================================================
+     SOURCES PANEL
+     ============================================================ */
+  function renderSourcesPanel(){
+    const body = document.getElementById("sources-panel-body");
+    const groups = [];
+    const methodologySources = DATA.methodology.sources.filter(s=>s.url);
+    if(methodologySources.length) groups.push({ title:"Cobertura del congreso", items: methodologySources });
+    const photoSources = Object.keys(DATA.speakerPhotos||{}).map(name=>({
+      label: name+" — "+DATA.speakerPhotos[name].sourceLabel, url: DATA.speakerPhotos[name].sourceUrl
+    })).filter(x=>x.url);
+    if(photoSources.length) groups.push({ title:"Retratos oficiales de ponentes", items: photoSources });
+    if(DATA.meta.relatedWork) groups.push({ title:"Análisis relacionado del autor", items:[{ label: DATA.meta.relatedWork.title, url: DATA.meta.relatedWork.url }] });
+    if(!groups.length){
+      body.appendChild(el("p",{style:"color:var(--text-muted);font-size:.85rem"},["No hay fuentes con URL pública verificable registradas."]));
+      return;
+    }
+    groups.forEach(g=>{
+      const gEl = el("div",{class:"sources-panel-group"},[ el("h3",{},[g.title]) ]);
+      const ul = el("ul",{class:"sources-panel-list"});
+      g.items.forEach(it=> ul.appendChild(el("li",{},[ el("a",{href:it.url, target:"_blank", rel:"noopener noreferrer"},[it.label]) ])));
+      gEl.appendChild(ul);
+      body.appendChild(gEl);
+    });
+  }
+  function initSourcesPanelToggle(){
+    const btn = document.getElementById("sources-panel-btn");
+    const panel = document.getElementById("sources-panel");
+    btn.addEventListener("click", ()=>{
+      panel.hidden = !panel.hidden;
+      if(!panel.hidden) panel.scrollIntoView({behavior:"smooth", block:"start"});
+    });
+  }
+
+  /* ============================================================
+     CHANGELOG
+     ============================================================ */
+  function initChangelog(){
+    const body = document.getElementById("changelog-body");
+    const list = el("ul",{class:"changelog-list"});
+    (DATA.changelog||[]).forEach(c=> list.appendChild(el("li",{},[ el("time",{},[c.date]), el("span",{},[c.summary]) ])));
+    body.appendChild(list);
+    document.getElementById("changelog-toggle").addEventListener("click", ()=>{ body.hidden = !body.hidden; });
+  }
+
+  /* ============================================================
+     EXPORT: Markdown + Print/PDF per section
+     ============================================================ */
+  function domToMarkdown(node){
+    let out = "";
+    node.childNodes.forEach(child=>{
+      if(child.nodeType === 3){ out += child.textContent; return; }
+      if(child.nodeType !== 1) return;
+      const tag = child.tagName.toLowerCase();
+      if(tag==="h3" || tag==="h4"){ out += "\n### "+child.textContent.trim()+"\n\n"; }
+      else if(tag==="p"){ out += child.textContent.trim()+"\n\n"; }
+      else if(tag==="ul" || tag==="ol"){
+        child.querySelectorAll(":scope > li").forEach(li=>{ out += "- "+li.textContent.trim().replace(/\s+/g," ")+"\n"; });
+        out += "\n";
+      } else if(tag==="table"){
+        const rows = [...child.querySelectorAll("tr")];
+        rows.forEach((tr,ri)=>{
+          const cells = [...tr.children].map(c=>c.textContent.trim().replace(/\|/g,"/").replace(/\s+/g," "));
+          out += "| "+cells.join(" | ")+" |\n";
+          if(ri===0) out += "|"+cells.map(()=>" --- ").join("|")+"|\n";
+        });
+        out += "\n";
+      } else if(tag==="button" || tag==="svg" || tag==="input"){
+        // skip interactive chrome
+      } else {
+        out += domToMarkdown(child);
+      }
+    });
+    return out;
+  }
+  function exportSectionMarkdown(section){
+    const body = document.getElementById("body-"+section.id);
+    if(!body) return;
+    const clone = body.cloneNode(true);
+    clone.querySelectorAll(".export-actions, .a11y-list-toggle, .data-table-actions, .a11y-list, .diagram-tooltip, .avatar").forEach(n=>n.remove());
+    let md = "# "+section.title+"\n\n"+md_escapeFrontmatter(section)+"\n";
+    md += domToMarkdown(clone);
+    md += "\n---\nFuente: XXI Congreso Nacional de Salud 2026 — "+location.href.split("#")[0]+"#sec-"+section.id+"\n";
+    const blob = new Blob([md], {type:"text/markdown;charset=utf-8;"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = section.id+".md";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=> URL.revokeObjectURL(url), 2000);
+  }
+  function md_escapeFrontmatter(section){
+    return "*"+section.sub+"*\n";
+  }
+  function printSection(sectionId){
+    openSection(sectionId);
+    const item = document.getElementById("sec-"+sectionId);
+    if(!item) return;
+    item.classList.add("print-target");
+    document.body.classList.add("print-single");
+    window.print();
+  }
+  function initExportCleanup(){
+    window.addEventListener("afterprint", ()=>{
+      document.body.classList.remove("print-single");
+      document.querySelectorAll(".acc-item.print-target").forEach(n=>n.classList.remove("print-target"));
+    });
+  }
+  function addExportActions(){
+    SECTIONS.forEach(s=>{
+      const body = document.getElementById("body-"+s.id);
+      if(!body) return;
+      const row = el("div",{class:"export-actions"});
+      const mdBtn = el("button",{class:"btn", type:"button"},["Exportar Markdown"]);
+      mdBtn.addEventListener("click", ()=> exportSectionMarkdown(s));
+      const printBtn = el("button",{class:"btn", type:"button"},["Imprimir / PDF"]);
+      printBtn.addEventListener("click", ()=> printSection(s.id));
+      row.appendChild(mdBtn); row.appendChild(printBtn);
+      body.appendChild(row);
+    });
+  }
+
+  /* ============================================================
      BOOT
      ============================================================ */
   function boot(){
@@ -865,6 +1417,11 @@
     renderLectura();
     renderMetodologia();
 
+    renderSidebarTOC();
+    renderSourcesPanel();
+    addExportActions();
+    initChangelog();
+
     document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
     document.getElementById("expand-all").addEventListener("click", ()=> setAllSections(true));
     document.getElementById("collapse-all").addEventListener("click", ()=> setAllSections(false));
@@ -872,6 +1429,16 @@
     document.addEventListener("click", (e)=>{
       if(!e.target.closest || !e.target.closest(".node-box, .loop-tag-group")) hideDiagramTooltip();
     });
+
+    initMobileSidebar();
+    initSearch();
+    initShortcutsPanel();
+    initKeyboardShortcuts();
+    initFocusMode();
+    initScrollTop();
+    initSourcesPanelToggle();
+    initExportCleanup();
+    initScrollspy();
   }
 
   if(document.readyState === "loading"){

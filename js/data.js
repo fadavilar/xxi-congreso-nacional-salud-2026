@@ -56,12 +56,12 @@ const DATA = {
   causalLoop: {
     citation: "Diagramación siguiendo a Homer, J. B., & Hirsch, G. B. (2006). System dynamics modeling for public health. American Journal of Public Health, 96(3), 452–458. Construido a partir de las cifras y afirmaciones declaradas en el congreso (ver sesiones citadas en cada nodo), no de un modelo estadístico ajustado.",
     nodes: [
-      { id: 1, label: "Déficit fiscal y estructural del sistema", actors: "Fedesarrollo · MinHacienda", sessions: [1, 15] },
-      { id: 2, label: "Flujo oportuno de recursos hacia prestadores", actors: "ADRES", sessions: [8, 21] },
-      { id: 3, label: "Cartera y mora con prestadores", actors: "IPS · Nueva EPS", sessions: [8, 13] },
-      { id: 4, label: "Riesgo de cierre de servicios", actors: "Prestadores / IPS", sessions: [13, 17] },
-      { id: 5, label: "Intervención y vigilancia especial de EPS", actors: "Supersalud · Procuraduría", sessions: [13, 16] },
-      { id: 6, label: "Confianza de prestadores e inversionistas", actors: "Mercado del sector salud", sessions: [] },
+      { id: 1, label: "Déficit fiscal y estructural del sistema", actors: "Fedesarrollo · MinHacienda", sessions: [1, 15], confidence: "escenario" },
+      { id: 2, label: "Flujo oportuno de recursos hacia prestadores", actors: "ADRES", sessions: [8, 21], confidence: "escenario" },
+      { id: 3, label: "Cartera y mora con prestadores", actors: "IPS · Nueva EPS", sessions: [8, 13], confidence: "escenario" },
+      { id: 4, label: "Riesgo de cierre de servicios", actors: "Prestadores / IPS", sessions: [13, 17], confidence: "escenario" },
+      { id: 5, label: "Intervención y vigilancia especial de EPS", actors: "Supersalud · Procuraduría", sessions: [13, 16], confidence: "escenario" },
+      { id: 6, label: "Confianza de prestadores e inversionistas", actors: "Mercado del sector salud", sessions: [], confidence: "nota-autor" },
     ],
     // polarity: "-" = las variables cambian en sentido opuesto; "+" = cambian en el mismo sentido
     edges: [
@@ -167,7 +167,8 @@ const DATA = {
       after: { label: "Proyectado (presupuesto radicado)", value: "9%" },
       deltaNote: "El deterioro fiscal deja poco margen de maniobra para el financiamiento adicional que el sector salud reclama para 2027.",
       source: "Fedesarrollo (Marcela Meléndez), sesión 15 — XXI Congreso Nacional de Salud, 11 de septiembre de 2026.",
-      sourceUrl: null
+      sourceUrl: null,
+      confidence: "escenario"
     },
     {
       id: "cartera-nueva-eps",
@@ -178,7 +179,8 @@ const DATA = {
       after: { label: "Sin contrato formal", value: "≈600" },
       deltaNote: "Cerca del 16% de la red de prestadores de Nueva EPS opera sin contrato formal; el lineamiento de pago se fijó en máximo 80% para lo público y 70% para lo privado, con excepciones por riesgo de cierre de servicios.",
       source: "Roberto Solano, Agente Interventor de Nueva EPS, sesión 13 — XXI Congreso Nacional de Salud, 11 de septiembre de 2026.",
-      sourceUrl: null
+      sourceUrl: null,
+      confidence: "escenario"
     },
   ],
 
@@ -186,6 +188,9 @@ const DATA = {
   // Cifras clave adicionales — un solo punto verificado cada una,
   // agrupadas por eje temático. Todas declaradas en el escenario por
   // el ponente citado; no se dispone de URL pública individual.
+  // Confiabilidad: todo este bloque se etiqueta como "escenario" al
+  // renderizar (ver renderCifras en app.js) — no se repite el campo
+  // en cada figura porque es uniforme para las 11.
   // ------------------------------------------------------------------
   keyFigureGroups: [
     {
@@ -221,6 +226,24 @@ const DATA = {
   ],
 
   // ------------------------------------------------------------------
+  // Herramientas de decisión — solo se incluyen calculadoras cuya
+  // fórmula es trivial y verificable con datos ya citados (sesión 14).
+  // No se construyen calculadoras que requerirían inventar una
+  // metodología que el congreso no proporcionó (ver Metodología).
+  // ------------------------------------------------------------------
+  tools: {
+    tariffGapCalculator: {
+      title: "Calculadora: brecha de cobertura SOAT frente a CUPS",
+      intro: "Estimación basada en el ratio agregado declarado en el congreso (sesión 14): el tarifario SOAT vigente cubre 3.281 de los 10.024 procedimientos de la Clasificación Única de Procedimientos en Salud (Resolución 2706 de 2025). No es una consulta código por código — el congreso no publicó el listado completo de códigos cubiertos — sino una proyección de cuántos de tus procedimientos frecuentes podrían caer, en promedio, fuera de esa cobertura.",
+      soatCodes: 3281,
+      cupsTotal: 10024,
+      session: 14,
+      confidence: "escenario",
+      disclaimer: "Estimación agregada, no una verificación código por código. Para confirmar la cobertura de un procedimiento específico, consulte el tarifario SOAT vigente o el manual tarifario de su contraparte."
+    }
+  },
+
+  // ------------------------------------------------------------------
   // Recomendaciones — síntesis propia del autor, ancladas en puntos de
   // apalancamiento del diagnóstico causal. No son conclusiones del
   // congreso ni posiciones de Consultorsalud o de los ponentes citados.
@@ -230,6 +253,8 @@ const DATA = {
       title: "Publicar el manual tarifario único basado en costos reales",
       leverage: "Nodo 3 (cartera y mora) — cerrar la brecha SOAT/CUPS reduce la incertidumbre que alimenta la negociación caso a caso",
       text: "El tarifario SOAT vigente cubre apenas 3.281 de los 10.024 procedimientos ya definidos en la Resolución 2706 de 2025 (sesión 14). Con la clasificación de procedimientos ya publicada, el siguiente paso lógico es un manual tarifario único, obligatorio y basado en costos reales — no una actualización más del ISS 2001.",
+      owner: "MinSalud / Comisión de Regulación en Salud",
+      nextStep: "Publicar cronograma de expedición del tarifario único con plazos verificables.",
       outcomes: [
         { name: "Factibilidad", level: "alta", note: "La Resolución 2706 de 2025 ya define los procedimientos; falta fijar el tarifario, no la clasificación." },
         { name: "Evidencia disponible", level: "media", note: "Un solo ponente (Benedetti) documentó la brecha; no hay cifra oficial consolidada presentada en el congreso." },
@@ -240,6 +265,8 @@ const DATA = {
       title: "Evaluar públicamente la hoja de ruta de trazabilidad de ADRES antes de escalarla",
       leverage: "Nodo 2 (flujo de recursos) — bucle B1 del diagnóstico causal",
       text: "ADRES presentó la meta de trazabilidad total (\"cada peso con huella digital\") como anuncio, no como resultado. Antes de escalarla a todo el sistema, conviene una evaluación independiente con indicadores explícitos de reducción de cartera y de tiempos de pago.",
+      owner: "ADRES / veeduría independiente",
+      nextStep: "Definir y publicar 2-3 indicadores de seguimiento antes de la siguiente fase de despliegue.",
       outcomes: [
         { name: "Factibilidad", level: "alta", note: "ADRES ya opera la plataforma; el costo marginal de instrumentar indicadores de seguimiento es bajo." },
         { name: "Evidencia disponible", level: "baja", note: "Ningún resultado de implementación fue reportado en el congreso, solo la hoja de ruta." },
@@ -250,6 +277,8 @@ const DATA = {
       title: "Fijar metas trimestrales de regularización de contratos en la intervención de Nueva EPS",
       leverage: "Nodo 3 → Nodo 4 — reducir directamente el riesgo de cierre de servicios",
       text: "Con cerca de 600 de más de 3.800 prestadores sin contrato formal (sesión 13), el límite de pago (máximo 80% público / 70% privado) protege el flujo de caja de la intervención, pero no fija una meta explícita de reducción de la cartera sin contrato en el tiempo.",
+      owner: "Agente Interventor Nueva EPS / Supersalud",
+      nextStep: "Publicar una meta trimestral de reducción de prestadores sin contrato formal.",
       outcomes: [
         { name: "Factibilidad", level: "media", note: "Requiere capacidad de gestión contractual adicional dentro de una intervención ya sobrecargada." },
         { name: "Evidencia disponible", level: "alta", note: "Cifra declarada directamente por el agente interventor en el escenario." },
@@ -260,6 +289,8 @@ const DATA = {
       title: "Convertir las radicaciones sin resolver de la Procuraduría en un tablero público de seguimiento",
       leverage: "Nodo 5 (vigilancia especial) → Nodo 6 (confianza)",
       text: "La cifra de ≈23 billones de pesos en radicaciones y facturas sin resolver (sesión 16) se conoció como un dato agregado y puntual. Publicarla de forma progresiva y territorializada la convertiría en un indicador líder de riesgo, no solo en un balance retrospectivo.",
+      owner: "Procuraduría General de la Nación",
+      nextStep: "Habilitar un tablero público con actualización periódica, desagregado por EPS o región.",
       outcomes: [
         { name: "Factibilidad", level: "alta", note: "El dato ya existe dentro de la vigilancia especial; el costo marginal de un tablero público es bajo." },
         { name: "Evidencia disponible", level: "media", note: "Cifra agregada nacional; no se presentó desagregación por EPS o región en el congreso." },
@@ -270,6 +301,8 @@ const DATA = {
       title: "Exigir métricas de resultado, no solo casos de uso, para la IA en salud",
       leverage: "Fuera del bucle principal — apalancamiento de innovación",
       text: "Las dos sesiones sobre inteligencia artificial (9 y 17) mostraron capacidades y decisiones de implementación pendientes, pero ningún caso de uso presentó una métrica de resultado (eficiencia, seguridad, reducción de error). La discusión de \"qué decisiones tomar primero\" debería incluir cómo se va a medir el resultado.",
+      owner: "Proveedores de IA en salud / IPS adoptantes",
+      nextStep: "Exigir un reporte de resultado (no solo de capacidades) en la próxima presentación pública de cada herramienta.",
       outcomes: [
         { name: "Factibilidad", level: "media", note: "Requiere que los proveedores de IA acepten reportar métricas de resultado, no solo funcionalidades." },
         { name: "Evidencia disponible", level: "baja", note: "Ningún caso de uso presentado incluyó datos de resultado medidos." },
@@ -437,6 +470,18 @@ const DATA = {
     { n: 20, day: "Viernes 11 de septiembre", time: "2:00 p.m. – 2:40 p.m.",  title: "ADRES 2026–2030: flujo oportuno, trazabilidad y confianza en los recursos de la salud", speaker: "Dr. Iván Sánchez Arango", role: "Director General de la ADRES", tag: "ADRES: flujo oportuno y trazabilidad" },
     { n: 21, day: "Viernes 11 de septiembre", time: "2:40 p.m. – 3:20 p.m.",  title: "Hospitales y clínicas como actores de transformación: la agenda para la prestación de servicios de salud 2026–2030", speaker: "Dr. Juan Carlos Giraldo", role: "Director general de la Asociación Colombiana de Hospitales y Clínicas (ACHC)", tag: "hospitales y clínicas como actores de transformación" },
     { n: 22, day: "Viernes 11 de septiembre", time: "3:20 p.m. – 4:20 p.m.",  title: "Modelación contractual avanzada para IPS 2027: costos, notas técnicas y gestión de contratos prospectivos", speaker: "Ing. Andrés Fabián Jiménez T.", role: "Especialista en inteligencia financiera hospitalaria, Synergia C&G", tag: "modelación contractual avanzada para IPS" },
+  ],
+
+  // ------------------------------------------------------------------
+  // Changelog — historial real de publicación (fechas de los commits
+  // del repositorio), más reciente primero.
+  // ------------------------------------------------------------------
+  changelog: [
+    { date: "2026-09-15", summary: "Navegación por índice lateral, buscador en vivo, atajos de teclado, modo de lectura enfocada, etiquetas de confiabilidad de datos, panel de fuentes, exportación a Markdown/PDF y mejoras de accesibilidad (WCAG AA)." },
+    { date: "2026-09-15", summary: "Mapa mental interactivo y plantilla descargable en Word para notas técnicas de proveedor a EPS, anidados con la sesión 22 (taller de notas técnicas)." },
+    { date: "2026-09-15", summary: "Nota técnica sobre la brecha entre intervención e implementación a nivel de IPS, con opciones de cierre y marco de resultados de implementación." },
+    { date: "2026-09-15", summary: "Diagnóstico causal (bucles R1/B1), recomendaciones, lagunas de evidencia y avatares de ponentes (fotos oficiales para funcionarios públicos, iniciales para el resto)." },
+    { date: "2026-09-15", summary: "Publicación inicial: explorador interactivo del XXI Congreso Nacional de Salud 2026 (ejes temáticos, cifras clave, agenda completa, metodología)." },
   ],
 
   methodology: {

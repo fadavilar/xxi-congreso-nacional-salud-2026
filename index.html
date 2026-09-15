@@ -19,41 +19,110 @@
 
 <header class="site-header">
   <div class="container bar">
+    <button class="icon-btn toc-toggle" id="toc-toggle" type="button" aria-label="Abrir índice" aria-expanded="false" aria-controls="sidebar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+    </button>
     <div class="brand">
       <span class="dot" aria-hidden="true"></span>
       <span id="brand-title">XXI Congreso Nacional de Salud</span>
     </div>
+    <button class="search-trigger" id="search-trigger" type="button" aria-haspopup="dialog" aria-controls="search-panel">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <span>Buscar ponente, cifra, sesión, eje…</span>
+      <kbd>/</kbd>
+    </button>
     <div class="header-actions">
+      <button class="icon-btn" id="help-toggle" type="button" aria-label="Atajos de teclado" aria-haspopup="dialog" aria-controls="shortcuts-panel" title="Atajos de teclado (?)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.5 2.5 0 0 1 4.9.8c0 1.6-2.4 1.8-2.4 3.4"/><circle cx="12" cy="16.8" r=".4" fill="currentColor" stroke="none"/></svg>
+      </button>
+      <button class="icon-btn" id="focus-toggle" type="button" aria-label="Modo de lectura enfocada" aria-pressed="false" title="Modo de lectura enfocada">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V5a1 1 0 0 1 1-1h4M20 9V5a1 1 0 0 0-1-1h-4M4 15v4a1 1 0 0 0 1 1h4M20 15v4a1 1 0 0 1-1 1h-4"/></svg>
+      </button>
       <button class="icon-btn theme-toggle" id="theme-toggle" type="button" aria-label="Cambiar modo claro/oscuro" title="Modo claro / oscuro">
         <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.4 4.4l1.7 1.7M17.9 17.9l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.4 19.6l1.7-1.7M17.9 6.1l1.7-1.7"/></svg>
         <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5z"/></svg>
       </button>
     </div>
   </div>
+  <nav class="breadcrumb" id="breadcrumb" aria-label="Ruta de navegación"></nav>
 </header>
 
-<main id="main">
-  <div class="container">
-    <section class="hero">
-      <span class="eyebrow" id="hero-framework">Síntesis de congreso</span>
-      <span class="eyebrow" id="hero-period" style="background:transparent;padding-left:0"></span>
-      <h1 id="hero-title">XXI Congreso Nacional de Salud 2026</h1>
-      <p class="lede" id="hero-lede">Explorador interactivo de los ejes temáticos, las cifras clave y la agenda completa.</p>
-      <p class="byline" id="byline"></p>
-      <div class="stat-grid" id="stat-grid"></div>
-    </section>
-
-    <div class="toolbar">
-      <span class="hint">10 secciones · el resumen ejecutivo está abierto, el resto se expande a tu ritmo</span>
-      <div style="display:flex;gap:8px">
-        <button class="btn" id="collapse-all" type="button">Colapsar todo</button>
-        <button class="btn btn-primary" id="expand-all" type="button">Expandir todo</button>
-      </div>
+<!-- Search overlay -->
+<div class="search-panel" id="search-panel" role="dialog" aria-modal="true" aria-label="Buscar en el explorador" hidden>
+  <div class="search-panel-inner">
+    <div class="search-input-row">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input type="text" id="search-input" placeholder="Ponente, cargo, tema, cifra, sesión, eje…" autocomplete="off" aria-label="Texto de búsqueda" aria-controls="search-results" aria-expanded="false" role="combobox" aria-autocomplete="list">
+      <button class="icon-btn" id="search-close" type="button" aria-label="Cerrar búsqueda (Esc)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
     </div>
-
-    <div class="accordion" id="accordion"></div>
+    <ul class="search-results" id="search-results" role="listbox" aria-label="Resultados de búsqueda"></ul>
+    <p class="search-hint">↑ / ↓ para navegar · Enter para ir · Esc para cerrar</p>
   </div>
-</main>
+</div>
+
+<!-- Keyboard shortcuts help -->
+<div class="shortcuts-panel" id="shortcuts-panel" role="dialog" aria-modal="true" aria-label="Atajos de teclado" hidden>
+  <div class="shortcuts-panel-inner">
+    <div class="shortcuts-head">
+      <h2>Atajos de teclado</h2>
+      <button class="icon-btn" id="shortcuts-close" type="button" aria-label="Cerrar (Esc)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <dl class="shortcuts-list">
+      <div><dt><kbd>/</kbd></dt><dd>Abrir el buscador</dd></div>
+      <div><dt><kbd>Esc</kbd></dt><dd>Cerrar buscador, ayuda o índice móvil</dd></div>
+      <div><dt><kbd>↑</kbd> <kbd>↓</kbd></dt><dd>Moverse entre resultados de búsqueda</dd></div>
+      <div><dt><kbd>Enter</kbd></dt><dd>Ir al resultado resaltado</dd></div>
+      <div><dt><kbd>?</kbd></dt><dd>Abrir/cerrar esta ayuda</dd></div>
+    </dl>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="sidebar-scrim" id="sidebar-scrim" hidden></div>
+  <aside class="sidebar" id="sidebar" aria-label="Índice de contenidos">
+    <nav class="toc" id="toc" aria-label="Secciones"></nav>
+    <div class="sidebar-footer">
+      <button class="btn sources-panel-btn" id="sources-panel-btn" type="button">Panel de fuentes</button>
+    </div>
+  </aside>
+
+  <main id="main">
+    <div class="container">
+      <section class="hero">
+        <span class="eyebrow" id="hero-framework">Síntesis de congreso</span>
+        <span class="eyebrow" id="hero-period" style="background:transparent;padding-left:0"></span>
+        <h1 id="hero-title">XXI Congreso Nacional de Salud 2026</h1>
+        <p class="lede" id="hero-lede">Explorador interactivo de los ejes temáticos, las cifras clave y la agenda completa.</p>
+        <p class="byline" id="byline"></p>
+        <div class="stat-grid" id="stat-grid"></div>
+      </section>
+
+      <div class="toolbar">
+        <span class="hint" id="section-count-hint">10 secciones · el resumen ejecutivo está abierto, el resto se expande a tu ritmo</span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn" id="collapse-all" type="button">Colapsar todo</button>
+          <button class="btn btn-primary" id="expand-all" type="button">Expandir todo</button>
+        </div>
+      </div>
+
+      <div class="accordion" id="accordion"></div>
+
+      <section class="sources-panel" id="sources-panel" aria-labelledby="sources-panel-title" hidden>
+        <h2 id="sources-panel-title">Panel de fuentes</h2>
+        <p class="sources-panel-intro">Todas las fuentes con URL pública verificable citadas en esta aplicación, en un solo lugar.</p>
+        <div id="sources-panel-body"></div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<button class="scroll-top" id="scroll-top" type="button" aria-label="Volver arriba" hidden>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
 
 <footer class="site-footer">
   <div class="container">
@@ -61,9 +130,11 @@
     <p id="footer-author"></p>
     <p>© <span id="year"></span> · Contenido publicado con fines de divulgación profesional. "Mi lectura" es una opinión personal del autor.</p>
     <div class="cc-block">
-      <a class="cc-badge" id="cc-badge" href="#" target="_blank" rel="license noopener"></a>
+      <a class="cc-badge" id="cc-badge" href="#" target="_blank" rel="license noopener noreferrer"></a>
       <p id="footer-license-text"></p>
     </div>
+    <p class="changelog-toggle-row"><button class="btn" id="changelog-toggle" type="button">Ver historial de cambios</button></p>
+    <div id="changelog-body" class="changelog-body" hidden></div>
   </div>
 </footer>
 
