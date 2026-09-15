@@ -274,6 +274,32 @@ p{ margin: 0 0 .8em; }
 }
 .selective-box h4{ color: var(--primary-2); font-size:.78rem; text-transform:uppercase; letter-spacing:.05em; }
 
+.related-work-box{
+  background: var(--surface-2); border:1px dashed var(--border); border-radius: var(--radius);
+  padding: 14px 16px; margin-top: 14px; font-size:.86rem;
+}
+.related-work-box h4{ color: var(--text-muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; margin-bottom:6px; }
+
+/* Quoted-phrase citation chip (replaces plain numeric refs) */
+.cite-tag{
+  display:inline-block; font-size:.78rem; font-style:italic; color: var(--primary-2);
+  background: var(--primary-tint); border:1px solid var(--border); border-radius:6px;
+  padding:1px 8px; margin:2px 3px 2px 0; line-height:1.6; cursor:default;
+}
+.related-work-box p{ color: var(--text-muted); margin: 4px 0 0; }
+
+/* ============================================================
+   Speaker avatars
+   ============================================================ */
+.avatar{
+  display:inline-flex; align-items:center; justify-content:center;
+  border-radius: 50%; flex: none; font-weight:800; letter-spacing:.02em;
+  vertical-align: middle; object-fit: cover;
+}
+.avatar-photo{ border:1.5px solid var(--border); background: var(--surface-2); }
+.avatar-initials{ border:1.5px solid currentColor; background: color-mix(in srgb, currentColor 14%, var(--surface)); }
+.speaker-cell{ display:inline-flex; align-items:center; gap:8px; }
+
 /* ============================================================
    Causal diagram
    ============================================================ */
