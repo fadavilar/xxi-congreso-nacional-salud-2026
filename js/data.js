@@ -291,6 +291,67 @@ const DATA = {
   ],
 
   // ------------------------------------------------------------------
+  // Nota técnica — plantilla de nota de política pública (contexto →
+  // brecha → evidencia → opciones → próximos pasos) aplicada a una
+  // oportunidad que atravesó el congreso sin nombrarse explícitamente:
+  // la distancia entre las intervenciones que se anuncian a nivel de
+  // pagador/regulador y su implementación real a nivel de IPS y otros
+  // prestadores. Síntesis propia del autor.
+  // ------------------------------------------------------------------
+  technicalNote: {
+    title: "De la intervención a la implementación",
+    subtitle: "Cerrar la brecha entre lo que se anuncia a nivel de pagador/regulador y lo que se implementa a nivel de IPS y otros prestadores",
+    purpose: "Esta nota técnica usa un formato estándar de nota de política pública — contexto, brecha, evidencia, opciones, próximos pasos — para sintetizar una oportunidad que atravesó el congreso sin nombrarse explícitamente como tal.",
+    context: "El congreso mostró una agenda densa de intervenciones anunciadas desde el nivel central: la intervención de Nueva EPS, la auditoría forense de la UPC, la hoja de ruta de trazabilidad de ADRES, la agenda regulatoria de INVIMA y la nueva caja de herramientas del IETS. Todas son decisiones que se toman y se comunican desde el pagador, el regulador o el ente de control — no desde el prestador que debe absorberlas operativamente.",
+    gapTable: {
+      columns: ["Intervención anunciada (nivel pagador/regulador)", "Evidencia de implementación en IPS (nivel prestador)"],
+      rows: [
+        ["Límite de pago 80% público / 70% privado en la intervención de Nueva EPS (sesión 13)", "Sin meta explícita de regularización de contratos para los ≈600 prestadores sin contrato formal"],
+        ["Auditoría forense de la UPC (sesión 11)", "Sin mecanismo reportado de retroalimentación operativa hacia las IPS auditadas"],
+        ["Hoja de ruta de trazabilidad total de ADRES (sesión 21)", "Sin evaluación de cómo cambia el flujo de caja percibido por las IPS"],
+        ["Casos de uso de IA generativa y agentes inteligentes (sesiones 9 y 17)", "Sin métricas de adopción o de resultado operativo a nivel de IPS"],
+        ["Manual tarifario único pendiente (sesión 14)", "Una sola sesión del congreso (22) abordó cómo una IPS modela contractualmente estos cambios"],
+      ]
+    },
+    opportunity: "El congreso cerró justamente con la sesión 22 — modelación contractual avanzada para IPS — la única que trató explícitamente cómo un prestador opera estos cambios, no solo cómo el pagador los anuncia. Que el sector ya reserve un espacio para esto sugiere que la implementación a nivel de IPS es la siguiente frontera; esta nota técnica propone hacerla explícita en la agenda, no dejarla como nota de cierre.",
+    options: [
+      {
+        title: "Exigir un componente de implementación en cada intervención de EPS",
+        text: "Toda intervención de EPS debería incluir, desde su diseño, un componente explícito de acompañamiento técnico a IPS — no solo límites de pago — con indicadores de adopción medidos a nivel de prestador.",
+      },
+      {
+        title: "Estandarizar herramientas de modelación contractual para IPS",
+        text: "Convertir herramientas como la presentada en la sesión 22 en requisito mínimo para las IPS que negocian con EPS intervenidas o bajo vigilancia especial, no en un taller aislado de congreso.",
+      },
+      {
+        title: "Vincular el manual tarifario único con capacitación en costeo",
+        text: "La publicación del manual tarifario único (ver Recomendaciones) debería ir acompañada de un programa que permita a las IPS costear procedimientos bajo el nuevo esquema, no solo recibir la tarifa.",
+      },
+      {
+        title: "Medir adopción y resultado, no solo despliegue",
+        text: "Cualquier iniciativa de IA en salud debería reportar cuántas IPS la adoptaron y con qué efecto operativo — no solo el caso de uso conceptual presentado en el escenario.",
+      },
+    ],
+    outcomesFramework: {
+      note: "Marco de resultados de implementación (adaptado de Proctor et al., 2011) aplicado a la adopción de herramientas de implementación por parte de las IPS — ninguna de estas dimensiones fue evaluada en el congreso; se listan como agenda pendiente.",
+      rows: [
+        { name: "Aceptabilidad", level: "por evaluar", note: "No se documentó si las IPS perciben estas herramientas como útiles o como carga administrativa adicional." },
+        { name: "Adopción", level: "por evaluar", note: "No hay dato sobre cuántas IPS usan hoy herramientas de modelación contractual." },
+        { name: "Factibilidad", level: "alta", note: "Las herramientas ya existen (sesión 22); el límite es la capacidad técnica instalada en cada IPS, no la disponibilidad de la herramienta." },
+        { name: "Penetración", level: "incierta", note: "Probablemente concentrada en IPS grandes o urbanas; sin evidencia sobre IPS pequeñas o rurales." },
+        { name: "Sostenibilidad", level: "por evaluar", note: "Depende de que el acompañamiento sea un programa continuo, no un evento puntual de congreso." },
+      ]
+    },
+    nextSteps: [
+      { actor: "MinSalud / ADRES", action: "Condicionar el desembolso ligado a la hoja de ruta de trazabilidad a métricas de adopción por IPS, no solo a la operación de la plataforma." },
+      { actor: "Gremios (ACHC y similares)", action: "Documentar y difundir casos de IPS que ya cerraron esta brecha, no solo casos de crisis de cartera." },
+      { actor: "Consultoras y proveedores de tecnología", action: "Reportar públicamente resultados de implementación (eficiencia, adopción) y no solo funcionalidades de sus herramientas." },
+      { actor: "Academia / investigación", action: "Extender a IPS privadas y mixtas el llamado de la revisión de gobernanza del autor a investigar la gobernanza a nivel micro-institucional." },
+    ],
+    sources: "Basada en las sesiones 9, 11, 13, 14, 17, 21 y 22 del congreso, y en las recomendaciones B y C de la revisión de gobernanza del autor (ver \"Análisis relacionado del autor\" en el Resumen ejecutivo).",
+  },
+
+  // ------------------------------------------------------------------
   // Mi lectura — síntesis y reflexión propia del autor
   // ------------------------------------------------------------------
   reading: {

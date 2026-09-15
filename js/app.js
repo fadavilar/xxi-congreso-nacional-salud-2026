@@ -113,8 +113,9 @@
     { id:"agenda", num:"05", title:"Agenda completa", sub:"22 sesiones, dos jornadas, con ponente y cargo", open:false },
     { id:"recomendaciones", num:"06", title:"Recomendaciones", sub:"Síntesis propia — ancladas en el diagnóstico causal", open:false },
     { id:"lagunas", num:"07", title:"Lagunas de evidencia", sub:"Qué no se presentó o quedó sin resolver", open:false },
-    { id:"lectura", num:"08", title:"Mi lectura", sub:"Síntesis y reflexión propia del autor", open:false },
-    { id:"metodologia", num:"09", title:"Metodología y fuentes", sub:"Cómo se elaboró esta síntesis, y sus límites", open:false },
+    { id:"nota-tecnica", num:"08", title:"Nota técnica", sub:"De la intervención a la implementación en IPS y otros prestadores", open:false },
+    { id:"lectura", num:"09", title:"Mi lectura", sub:"Síntesis y reflexión propia del autor", open:false },
+    { id:"metodologia", num:"10", title:"Metodología y fuentes", sub:"Cómo se elaboró esta síntesis, y sus límites", open:false },
   ];
 
   function buildAccordionShell(){
@@ -649,7 +650,65 @@
   }
 
   /* ============================================================
-     RENDER: 08 Mi lectura
+     RENDER: 08 Nota técnica
+     ============================================================ */
+  function renderNotaTecnica(){
+    const body = document.getElementById("body-nota-tecnica");
+    const t = DATA.technicalNote;
+
+    body.appendChild(el("div",{class:"selective-box"},[
+      el("h4",{},["Nota técnica"]),
+      el("h3",{},[t.title]),
+      el("p",{style:"color:var(--text-muted)"},[t.subtitle]),
+      el("p",{},[t.purpose]),
+    ]));
+
+    body.appendChild(el("h4",{style:"font-size:.86rem;margin-top:22px"},["1. Contexto"]));
+    body.appendChild(el("p",{},[t.context]));
+
+    body.appendChild(el("h4",{style:"font-size:.86rem;margin-top:18px"},["2. La brecha identificada"]));
+    const tableWrap = el("div",{class:"table-wrap"});
+    const table = el("table",{class:"data-table gap-table"},[
+      el("thead",{},[ el("tr",{}, t.gapTable.columns.map(c=>el("th",{},[c]))) ]),
+      el("tbody",{}, t.gapTable.rows.map(r=> el("tr",{}, r.map(cell=> el("td",{style:"white-space:normal;min-width:260px"},[cell]))))),
+    ]);
+    tableWrap.appendChild(table);
+    body.appendChild(tableWrap);
+
+    body.appendChild(el("h4",{style:"font-size:.86rem;margin-top:18px"},["3. Por qué es una oportunidad"]));
+    body.appendChild(el("p",{},[t.opportunity]));
+
+    body.appendChild(el("h4",{style:"font-size:.86rem;margin-top:18px"},["4. Opciones para cerrar la brecha"]));
+    t.options.forEach((o,i)=>{
+      body.appendChild(el("div",{class:"card"},[
+        el("strong",{},[(i+1)+". "+o.title]),
+        el("p",{style:"margin:4px 0 0"},[o.text]),
+      ]));
+    });
+
+    body.appendChild(el("h4",{style:"font-size:.86rem;margin-top:18px"},["5. Marco de resultados de implementación aplicable"]));
+    body.appendChild(el("p",{style:"font-size:.85rem;color:var(--text-muted)"},[t.outcomesFramework.note]));
+    const outWrap = el("div",{class:"outcomes"});
+    t.outcomesFramework.rows.forEach(o=>{
+      outWrap.appendChild(el("div",{class:"outcome"},[
+        el("div",{class:"name"},[o.name, el("span",{class:"level-pill "+levelClass(o.level)},[o.level])]),
+        el("div",{class:"note"},[o.note]),
+      ]));
+    });
+    body.appendChild(outWrap);
+
+    body.appendChild(el("h4",{style:"font-size:.86rem;margin-top:18px"},["6. A quién le compete / próximos pasos"]));
+    const stepsList = el("ul",{class:"gap-list"});
+    t.nextSteps.forEach(s=>{
+      stepsList.appendChild(el("li",{},[ el("strong",{},[s.actor+": "]), s.action ]));
+    });
+    body.appendChild(stepsList);
+
+    body.appendChild(el("p",{class:"indicator-source", style:"margin-top:16px"},[t.sources]));
+  }
+
+  /* ============================================================
+     RENDER: 09 Mi lectura
      ============================================================ */
   function renderLectura(){
     const body = document.getElementById("body-lectura");
@@ -661,7 +720,7 @@
   }
 
   /* ============================================================
-     RENDER: 09 Metodología y fuentes
+     RENDER: 10 Metodología y fuentes
      ============================================================ */
   function renderMetodologia(){
     const body = document.getElementById("body-metodologia");
@@ -691,6 +750,7 @@
     renderAgenda();
     renderRecomendaciones();
     renderLagunas();
+    renderNotaTecnica();
     renderLectura();
     renderMetodologia();
 
