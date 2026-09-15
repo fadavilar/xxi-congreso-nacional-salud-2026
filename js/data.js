@@ -296,15 +296,48 @@ const DATA = {
   ],
 
   // ------------------------------------------------------------------
-  // Lagunas de evidencia — qué no se presentó o quedó sin resolver
+  // Lagunas de evidencia — qué no se presentó o quedó sin resolver.
+  // Cada laguna se registra como "segments" (texto + enlaces opcionales)
+  // para poder distinguir, de forma imparcial, entre un tema que el
+  // congreso trató de forma incompleta y un tema que sencillamente no
+  // estuvo en la agenda — y para enlazar, cuando aplica, al trabajo
+  // previo del autor que ya señalaba esa misma ausencia.
   // ------------------------------------------------------------------
   gaps: [
-    "Ninguna sesión presentó una cifra única y reconciliada de la deuda del sistema: se citaron 19,7 billones (déficit estructural anual, sesión 15), 25–33 billones (deudas cruzadas, sesión 15) y ≈23 billones (radicaciones sin resolver, sesión 16) sin que quedara claro cuánto se solapan entre sí.",
-    "No hubo sesión dedicada a salud mental, salud indígena/SISPI, ni a la salud rural o dispersa — ausentes de una agenda centrada en financiamiento, tarifas e institucionalidad.",
-    "Los casos de uso de IA generativa (sesiones 9 y 17) no presentaron métricas de resultado (eficiencia, seguridad, reducción de error), solo capacidades y decisiones de implementación pendientes.",
-    "No se presentaron indicadores de resultado en salud (mortalidad evitable, calidad de la atención): casi todos los indicadores citados en el congreso fueron financieros o administrativos.",
-    "La hoja de ruta de trazabilidad de ADRES 2026–2030 y la auditoría forense de la UPC son anuncios recientes, sin evaluación de impacto disponible todavía — el mismo tipo de laguna identificada para el bucle B1 en la revisión de gobernanza del autor.",
-    "No se abordó la articulación territorial más allá de menciones generales a \"brechas territoriales\" en la sesión de epidemiología (sesión 5) — sin cifras desagregadas por departamento o municipio.",
+    {
+      segments: [
+        { text: "Ninguna sesión presentó una cifra única y reconciliada de la deuda del sistema: se citaron 19,7 billones (déficit estructural anual, sesión 15), 25–33 billones (deudas cruzadas, sesión 15) y ≈23 billones (radicaciones sin resolver, sesión 16) sin que quedara claro cuánto se solapan entre sí." },
+      ]
+    },
+    {
+      segments: [
+        { text: "Salud mental, salud indígena/SISPI y salud rural o dispersa no fueron tema de ninguna sesión — ausentes de una agenda centrada en financiamiento, tarifas e institucionalidad. No es que el congreso los tratara de forma incompleta: sencillamente no estaban en el programa. Dos de estos tres vacíos no son una novedad: la " },
+        { text: "revisión de gobernanza en salud pública del autor", href: "https://fadavilar.github.io/gobernanza-salud-publica-colombia/" },
+        { text: " ya señalaba la gobernanza de los sistemas de salud propios e interculturales indígenas (SISPI) y la autonomía de gestión en territorios dispersos como vacíos de evidencia y de rectoría; salud mental, en cambio, es una ausencia que no figuraba en ese trabajo previo." },
+      ]
+    },
+    {
+      segments: [
+        { text: "Los casos de uso de IA generativa (sesiones 9 y 17) no presentaron métricas de resultado (eficiencia, seguridad, reducción de error), solo capacidades y decisiones de implementación pendientes." },
+      ]
+    },
+    {
+      segments: [
+        { text: "No se presentaron indicadores de resultado en salud (mortalidad evitable, calidad de la atención): casi todos los indicadores citados en el congreso fueron financieros o administrativos." },
+      ]
+    },
+    {
+      segments: [
+        { text: "La hoja de ruta de trazabilidad de ADRES 2026–2030 (sesión 20) y la auditoría forense de la UPC (sesión 11) son anuncios recientes: ninguna sesión presentó todavía una evaluación de su impacto de implementación. Es el mismo tipo de vacío que identificaba el bucle B1 en la revisión de gobernanza del autor, y el que esta síntesis intenta hacer operativo — sin resolverlo, porque el congreso tampoco lo hizo — en el apartado " },
+        { text: "\"5. Marco de resultados de implementación aplicable\"", jump: { sectionId: "discusion", anchorId: "nota-tecnica-marco-resultados" } },
+        { text: " de la nota técnica." },
+      ]
+    },
+    {
+      segments: [
+        { text: "No se abordó la articulación territorial más allá de menciones generales a \"brechas territoriales\" en la sesión de epidemiología (sesión 5) — sin cifras desagregadas por departamento o municipio." },
+      ]
+    },
   ],
 
   // ------------------------------------------------------------------
@@ -318,8 +351,16 @@ const DATA = {
   technicalNote: {
     title: "De la intervención a la implementación",
     subtitle: "Cerrar la brecha entre lo que se anuncia a nivel de pagador/regulador y lo que se implementa a nivel de IPS y otros prestadores",
-    purpose: "Esta nota técnica usa un formato estándar de nota de política pública — contexto, brecha, evidencia, opciones, próximos pasos — para sintetizar una oportunidad que atravesó el congreso sin nombrarse explícitamente como tal.",
-    context: "El congreso mostró una agenda densa de intervenciones anunciadas desde el nivel central: la intervención de Nueva EPS, la auditoría forense de la UPC, la hoja de ruta de trazabilidad de ADRES, la agenda regulatoria de INVIMA y la nueva caja de herramientas del IETS. Todas son decisiones que se toman y se comunican desde el pagador, el regulador o el ente de control — no desde el prestador que debe absorberlas operativamente.",
+    purpose: "Esta nota técnica usa un formato estándar de nota de política pública — contexto, brecha, evidencia, opciones, próximos pasos — para sintetizar una oportunidad que atravesó el congreso sin nombrarse explícitamente como tal. A diferencia de la primera versión de este documento, el argumento y la herramienta descargable que lo acompaña (ver \"7. Herramienta práctica\") ya no se apoyan solo en lo dicho en el escenario: se contrastaron contra la metodología oficial que el Ministerio de Salud exige para este mismo instrumento (ver \"0. Marco normativo\"), lo que permitió corregir imprecisiones y fundamentar mejor cada elemento.",
+    regulatoryBasis: {
+      title: "0. Marco normativo: la nota técnica ya es una obligación legal, no una buena práctica opcional",
+      text: "La nota técnica no es una idea de este congreso ni de esta síntesis: es un contenido mínimo obligatorio de los acuerdos de voluntades entre Entidades Responsables de Pago (EPS, entidades adaptadas, ARL) y prestadores o proveedores de tecnologías en salud, exigido por el artículo 2.5.3.4.2.2 del Decreto 780 de 2016 y desarrollado metodológicamente por el Ministerio de Salud en abril de 2022. La norma define cuatro elementos mínimos que debe contener toda nota técnica — (1) identificación de los servicios y tecnologías con su codificación CUPS/CUM-IUM, (2) población objeto total y población susceptible, (3) frecuencias de uso proyectadas, y (4) costos o valores acordados — y distingue explícitamente el riesgo primario (variación en la incidencia o la severidad de un evento en salud, no atribuible a ineficiencia) del riesgo técnico (variación en la utilización del servicio). Ninguna sesión del congreso mencionó este marco por su nombre; la sesión 22 lo aplicó en la práctica sin citarlo. Esta nota técnica y su plantilla descargable retoman esos cuatro elementos, sus fórmulas y su terminología, en vez de proponer una estructura propia.",
+      sourceRefs: [
+        { label: "Ministerio de Salud y Protección Social. \"Nota técnica: Decreto 441 de 2022 — Lineamientos sobre su construcción, uso y seguimiento\" (abril de 2022).", url: "https://www.minsalud.gov.co/sites/rid/Lists/BibliotecaDigital/RIDE/VP/DOA/nota-tecnica-decreto-441-de-2022.pdf" },
+        { label: "Oscar Efrem. \"Nota Técnica País 2024\": tablero de referencia sobre las ~22.693 tecnologías y medicamentos (CUPS/CUM) y sus frecuencias/costos que sustentan la UPC — fuente de terceros, no una publicación oficial de MinSalud, útil como punto de contraste al momento de proyectar frecuencias y costos propios.", url: "https://oscarefrem.com/nota-tecnica-pais-2024/" },
+      ],
+    },
+    context: "El congreso mostró una agenda densa de intervenciones anunciadas desde el nivel central: la intervención de Nueva EPS, la auditoría forense de la UPC, la hoja de ruta de trazabilidad de ADRES, la agenda regulatoria de INVIMA y la nueva caja de herramientas del IETS. Todas son decisiones que se toman y se comunican desde el pagador, el regulador o el ente de control — no desde el prestador que debe absorberlas operativamente. La propia nota técnica que debería instrumentar buena parte de esa operación diaria entre EPS e IPS tiene, desde 2022, una metodología oficial detallada (ver \"0. Marco normativo\") — y aun así, ninguna de las 22 sesiones la mencionó explícitamente como el instrumento que ya exige la norma.",
     gapTable: {
       columns: ["Intervención anunciada (nivel pagador/regulador)", "Evidencia de implementación en IPS (nivel prestador)"],
       rows: [
@@ -348,9 +389,13 @@ const DATA = {
         title: "Medir adopción y resultado, no solo despliegue",
         text: "Cualquier iniciativa de IA en salud debería reportar cuántas IPS la adoptaron y con qué efecto operativo — no solo el caso de uso conceptual presentado en el escenario.",
       },
+      {
+        title: "Contrastar las notas técnicas propias contra la Nota Técnica País",
+        text: "Antes de proyectar frecuencias y costos desde cero, una IPS puede contrastarlos contra la Nota Técnica País — el insumo agregado a nivel nacional (frecuencias y costos por CUPS/CUM) que sustenta el cálculo de la UPC —, tal como recomienda la metodología oficial al listar las fuentes de información disponibles (ver \"0. Marco normativo\"). No reemplaza el costeo propio del prestador, pero ofrece un punto de referencia público donde hoy la mayoría parte de cero o de tarifarios (como el SOAT) que la propia norma advierte que no son la fuente adecuada para este propósito.",
+      },
     ],
     outcomesFramework: {
-      note: "Marco de resultados de implementación (adaptado de Proctor et al., 2011) aplicado a la adopción de herramientas de implementación por parte de las IPS — ninguna de estas dimensiones fue evaluada en el congreso; se listan como agenda pendiente.",
+      note: "Marco de resultados de implementación (adaptado de Proctor et al., 2011) aplicado a la adopción de herramientas de implementación por parte de las IPS — ninguna de estas dimensiones fue evaluada en el congreso; se listan como agenda pendiente. La metodología oficial de la nota técnica (ver \"0. Marco normativo\") exige pactar una periodicidad de seguimiento y mecanismos de ajuste frente a desviaciones, pero no exige evaluar estas cinco dimensiones de implementación — es una capa que esta síntesis añade sobre la obligación legal, no un requisito normativo en sí mismo.",
       rows: [
         { name: "Aceptabilidad", level: "por evaluar", note: "No se documentó si las IPS perciben estas herramientas como útiles o como carga administrativa adicional." },
         { name: "Adopción", level: "por evaluar", note: "No hay dato sobre cuántas IPS usan hoy herramientas de modelación contractual." },
@@ -365,7 +410,7 @@ const DATA = {
       { actor: "Consultoras y proveedores de tecnología", action: "Reportar públicamente resultados de implementación (eficiencia, adopción) y no solo funcionalidades de sus herramientas." },
       { actor: "Academia / investigación", action: "Extender a IPS privadas y mixtas el llamado de la revisión de gobernanza del autor a investigar la gobernanza a nivel micro-institucional." },
     ],
-    sources: "Basada en las sesiones 9, 11, 13, 14, 17, 20 y 22 del congreso, y en las recomendaciones B y C de la revisión de gobernanza del autor (ver \"Análisis relacionado del autor\" en el Resumen).",
+    sources: "Basada en las sesiones 9, 11, 13, 14, 17, 20 y 22 del congreso; en las recomendaciones B y C de la revisión de gobernanza del autor (ver \"Análisis relacionado del autor\" en el Resumen); y en la metodología oficial de la nota técnica (Decreto 780 de 2016 y su desarrollo de 2022 por MinSalud) y en el tablero de referencia sobre la Nota Técnica País, ambos citados en \"0. Marco normativo\" y en el Panel de fuentes.",
 
     // ------------------------------------------------------------------
     // Herramienta práctica anidada con la sesión 22 (taller de notas
@@ -375,24 +420,24 @@ const DATA = {
     // no un formato oficial ni exigido por ninguna entidad.
     // ------------------------------------------------------------------
     providerNoteTool: {
-      intro: "El congreso cerró con un taller práctico sobre modelación contractual avanzada para IPS — costos, notas técnicas y gestión de contratos prospectivos (sesión 22). A partir de esa sesión y de los hallazgos de tarifas (sesión 14) y epidemiología (sesión 5), este mapa mental resume los elementos que una nota técnica de un prestador hacia una EPS debería considerar. Toca o pasa el cursor sobre cada rama para ver el detalle.",
+      intro: "El congreso cerró con un taller práctico sobre modelación contractual avanzada para IPS — costos, notas técnicas y gestión de contratos prospectivos (sesión 22). A partir de esa sesión, de los hallazgos de tarifas (sesión 14) y epidemiología (sesión 5), y de la metodología oficial de la nota técnica (Decreto 780 de 2016, desarrollada por MinSalud en 2022 — ver \"0. Marco normativo\"), este mapa mental resume los elementos que una nota técnica de un prestador hacia una EPS debería considerar. Los cuatro elementos mínimos que exige la norma — identificación, población, frecuencias y costos — están marcados dentro de las ramas 1, 3 y 4 (cada ítem indica a cuál corresponde); las ramas 2 y 5 a 8 son buenas prácticas de negociación adicionales, no exigencias legales en sí mismas. Toca o pasa el cursor sobre cada rama para ver el detalle.",
       center: "Nota técnica: IPS → EPS",
       branches: [
         {
           id: 1, label: "Identificación y alcance", sessions: [22],
-          items: ["IPS / prestador y nivel de complejidad", "Línea de servicio o especialidad", "EPS o pagador destinatario", "Vigencia y período cubierto", "Población objetivo (afiliados cubiertos)"]
+          items: ["IPS / prestador y nivel de complejidad", "Línea de servicio o especialidad, codificada en CUPS (procedimientos) y CUM/IUM (medicamentos) — elemento mínimo 1 de la norma", "EPS o pagador destinatario", "Vigencia y período cubierto", "Población objeto total (afiliados cubiertos) y población susceptible por servicio — elemento mínimo 2"]
         },
         {
           id: 2, label: "Marco tarifario de referencia", sessions: [14, 22],
-          items: ["Manual tarifario aplicado (SOAT, ISS 2001, tarifario propio)", "Códigos CUPS cubiertos vs. no cubiertos", "Ajustes pactados frente al período anterior", "Justificación de desviaciones frente a tarifas históricas"]
+          items: ["Manual tarifario aplicado (SOAT, ISS 2001, tarifario propio)", "Códigos CUPS cubiertos vs. no cubiertos", "El SOAT y otros tarifarios de terceros sirven de contraste, no de base de costeo: la metodología oficial de MinSalud advierte que no reflejan el costo real de operación del prestador", "Ajustes pactados frente al período anterior", "Justificación de desviaciones frente a tarifas históricas"]
         },
         {
           id: 3, label: "Estructura de costos", sessions: [14, 22],
-          items: ["Costos directos: personal, insumos, medicamentos", "Costos indirectos / overhead", "Costos fijos vs. variables", "Punto de equilibrio (break-even)"]
+          items: ["Costos directos: personal asistencial, insumos, medicamentos", "Costos indirectos / overhead (recomendado no superar ~15% del valor asignado por servicio)", "Costos fijos vs. variables — elemento mínimo 4 de la norma (costos o valores acordados)", "Punto de equilibrio (break-even)"]
         },
         {
           id: 4, label: "Supuestos de utilización", sessions: [5, 22],
-          items: ["Frecuencia de uso esperada por afiliado", "Base epidemiológica o demanda proyectada", "Estacionalidad o variabilidad esperada", "Fuente de los datos históricos"]
+          items: ["Frecuencia de uso esperada por afiliado, ajustada al período de vigencia del acuerdo — elemento mínimo 3 de la norma (fórmula: frecuencia del período de referencia ÷ tiempo de ese período × tiempo de vigencia del acuerdo)", "Base epidemiológica o demanda proyectada", "Riesgo primario (incidencia/severidad) y riesgo técnico (utilización) — dos riesgos distintos que la norma exige diferenciar", "Estacionalidad o variabilidad esperada", "Fuente de los datos históricos (RIPS propios, histórico de facturación, o contraste con la Nota Técnica País)"]
         },
         {
           id: 5, label: "Modelo de pago propuesto", sessions: [22],
@@ -415,7 +460,7 @@ const DATA = {
         filename: "nota-tecnica-ips-eps-plantilla.xlsx",
         path: "downloads/nota-tecnica-ips-eps-plantilla.xlsx",
         label: "Descargar plantilla (.xlsx)",
-        note: "Plantilla editable en Excel con 3 hojas: \"Guía\" (referencia con la sesión del congreso de cada elemento), \"Ingreso de valores\" (los 8 elementos con un ejemplo prediligenciado en azul, listo para reemplazar) y \"Resumen\" (costo total, margen y punto de equilibrio, calculados automáticamente por fórmula a partir de lo que se diligencie). No es un formato oficial ni exigido por ninguna EPS o entidad regulatoria — es una guía práctica basada en esta síntesis."
+        note: "Plantilla editable en Excel con 3 hojas: \"Guía\" (referencia normativa y de sesión del congreso de cada elemento), \"Ingreso de valores\" (los 8 elementos con un ejemplo prediligenciado en azul, listo para reemplazar) y \"Resumen\" (costo total, margen y punto de equilibrio, calculados automáticamente por fórmula a partir de lo que se diligencie). No existe un formato único de nota técnica exigido por ley — la norma exige el contenido, no una plantilla específica —, pero esta sí sigue los cuatro elementos mínimos y las fórmulas del Decreto 780 de 2016 (desarrollado por MinSalud en 2022): no es un documento oficial, pero tampoco es una estructura inventada por esta síntesis."
       }
     },
   },
@@ -483,6 +528,7 @@ const DATA = {
   // del repositorio), más reciente primero.
   // ------------------------------------------------------------------
   changelog: [
+    { date: "2026-09-15", summary: "Lagunas de evidencia reescritas con tono imparcial, distinguiendo temas ausentes de la agenda de temas tratados de forma incompleta, con enlaces a la revisión de gobernanza previa del autor y al marco de resultados de implementación; nota técnica y plantilla descargable fundamentadas en la metodología oficial de MinSalud (Decreto 780 de 2016, desarrollado en 2022) y contrastadas con la Nota Técnica País." },
     { date: "2026-09-15", summary: "Reorganización como documento de síntesis (resumen, introducción, materiales y métodos, resultados, discusión y recomendaciones, conclusión); agenda con conclusión por sesión y columna combinada de ponente/cargo; corrección de citas de sesión mal asignadas (17-21); plantilla de nota técnica reconstruida en Excel (Guía, Ingreso de valores, Resumen con fórmulas y ejemplo prediligenciado); calculadora SOAT/CUPS retirada; exportación consolidada solo a PDF." },
     { date: "2026-09-15", summary: "Navegación por índice lateral, buscador en vivo, atajos de teclado, modo de lectura enfocada, etiquetas de confiabilidad de datos, panel de fuentes, exportación a Markdown/PDF y mejoras de accesibilidad (WCAG AA)." },
     { date: "2026-09-15", summary: "Mapa mental interactivo y plantilla descargable en Word para notas técnicas de proveedor a EPS, anidados con la sesión 22 (taller de notas técnicas)." },

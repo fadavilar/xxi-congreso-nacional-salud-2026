@@ -779,9 +779,27 @@
   function renderLagunas(){
     const body = document.getElementById("body-discusion");
     sectionDivider(body, "discusion-lagunas", "Lagunas de evidencia",
-      "Qué no se presentó o quedó sin resolver.");
+      "Qué no se presentó, qué se trató de forma incompleta, y qué sencillamente no estuvo en la agenda.");
     const list = el("ul",{class:"gap-list"});
-    DATA.gaps.forEach(g=> list.appendChild(el("li",{},[g])));
+    DATA.gaps.forEach(g=>{
+      const li = el("li",{});
+      (g.segments||[]).forEach(seg=>{
+        if(seg.href){
+          li.appendChild(el("a",{href:seg.href, target:"_blank", rel:"noopener noreferrer"},[seg.text]));
+        } else if(seg.jump){
+          const a = el("a",{href:"#"+seg.jump.anchorId},[seg.text]);
+          a.addEventListener("click",(e)=>{
+            e.preventDefault();
+            openSection(seg.jump.sectionId);
+            scrollToId(seg.jump.anchorId);
+          });
+          li.appendChild(a);
+        } else {
+          li.appendChild(document.createTextNode(seg.text));
+        }
+      });
+      list.appendChild(li);
+    });
     body.appendChild(list);
   }
 
@@ -800,6 +818,24 @@
       el("p",{style:"color:var(--text-muted)"},[t.subtitle]),
       el("p",{},[t.purpose]),
     ]));
+
+    if(t.regulatoryBasis){
+      const rb = t.regulatoryBasis;
+      const rbBox = el("div",{class:"related-work-box", style:"margin-top:18px"},[
+        el("h4",{style:"font-size:.86rem;margin:0 0 6px"},[rb.title]),
+        el("p",{},[rb.text]),
+      ]);
+      if(rb.sourceRefs && rb.sourceRefs.length){
+        const refsList = el("ul",{class:"gap-list", style:"margin-top:8px"});
+        rb.sourceRefs.forEach(s=>{
+          refsList.appendChild(el("li",{},[
+            el("a",{href:s.url, target:"_blank", rel:"noopener noreferrer"},[s.label])
+          ]));
+        });
+        rbBox.appendChild(refsList);
+      }
+      body.appendChild(rbBox);
+    }
 
     body.appendChild(el("h4",{style:"font-size:.86rem;margin-top:22px"},["1. Contexto"]));
     body.appendChild(el("p",{},[t.context]));
@@ -825,7 +861,7 @@
       ]));
     });
 
-    body.appendChild(el("h4",{style:"font-size:.86rem;margin-top:18px"},["5. Marco de resultados de implementación aplicable"]));
+    body.appendChild(el("h4",{id:"nota-tecnica-marco-resultados", style:"font-size:.86rem;margin-top:18px"},["5. Marco de resultados de implementación aplicable"]));
     body.appendChild(el("p",{style:"font-size:.85rem;color:var(--text-muted)"},[t.outcomesFramework.note]));
     const outWrap = el("div",{class:"outcomes"});
     t.outcomesFramework.rows.forEach(o=>{
@@ -1149,7 +1185,8 @@
       idx.push({ type:"Recomendación", label:r.title, detail:r.leverage, sectionId:"discusion", anchorId:"discusion-recomendaciones" });
     });
     DATA.gaps.forEach(g=>{
-      idx.push({ type:"Laguna", label: g.length>90? g.slice(0,90)+"…" : g, detail:"Lagunas de evidencia", sectionId:"discusion", anchorId:"discusion-lagunas" });
+      const gapText = (g.segments||[]).map(s=>s.text).join("");
+      idx.push({ type:"Laguna", label: gapText.length>90? gapText.slice(0,90)+"…" : gapText, detail:"Lagunas de evidencia", sectionId:"discusion", anchorId:"discusion-lagunas" });
     });
     idx.push({ type:"Sección", label:"Diagnóstico causal", detail:"Bucles R1 (crisis de caja) y B1 (trazabilidad y auditoría)", sectionId:"resultados", anchorId:"resultados-diagnostico" });
     idx.push({ type:"Sección", label:"Nota técnica", detail:"Intervención vs. implementación en IPS", sectionId:"discusion", anchorId:"discusion-nota-tecnica" });
@@ -1295,6 +1332,8 @@
     })).filter(x=>x.url);
     if(photoSources.length) groups.push({ title:"Retratos oficiales de ponentes", items: photoSources });
     if(DATA.meta.relatedWork) groups.push({ title:"Análisis relacionado del autor", items:[{ label: DATA.meta.relatedWork.title, url: DATA.meta.relatedWork.url }] });
+    const notaTecnicaRefs = (DATA.technicalNote && DATA.technicalNote.regulatoryBasis && DATA.technicalNote.regulatoryBasis.sourceRefs) || [];
+    if(notaTecnicaRefs.length) groups.push({ title:"Metodología oficial de la nota técnica", items: notaTecnicaRefs });
     if(!groups.length){
       body.appendChild(el("p",{style:"color:var(--text-muted);font-size:.85rem"},["No hay fuentes con URL pública verificable registradas."]));
       return;

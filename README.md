@@ -12,7 +12,7 @@ La app está organizada como un documento de síntesis (resumen → introducció
 2. **Introducción** — por qué este congreso, cómo se organiza este documento, y su relación con la revisión de gobernanza previa del autor.
 3. **Materiales y métodos** — metodología y fuentes de esta síntesis, más la **agenda completa**: tabla filtrable de las 22 sesiones (ponente y cargo en una sola columna, y una columna con la conclusión más relevante de cada una).
 4. **Resultados** — diagnóstico causal (diagrama de bucles R1/B1, Homer & Hirsch 2006), ejes temáticos (cada hallazgo cita, entre comillas, la sesión que lo respalda) y cifras clave.
-5. **Discusión y recomendaciones** — tablero de acción con las recomendaciones del autor, lagunas de evidencia, y una nota técnica (contexto → brecha → opciones → próximos pasos) sobre la brecha entre intervención e implementación en IPS, con una herramienta práctica anidada con el taller de notas técnicas del congreso (sesión 22): mapa mental interactivo + plantilla descargable en Excel.
+5. **Discusión y recomendaciones** — tablero de acción con las recomendaciones del autor, lagunas de evidencia (con enlaces a la revisión de gobernanza previa del autor cuando aplica), y una nota técnica (contexto → marco normativo → brecha → opciones → próximos pasos) sobre la brecha entre intervención e implementación en IPS, fundamentada en la metodología oficial de MinSalud para este mismo instrumento (Decreto 780 de 2016, desarrollado en 2022), con una herramienta práctica anidada con el taller de notas técnicas del congreso (sesión 22): mapa mental interactivo + plantilla descargable en Excel.
 6. **Conclusión** — mi lectura: síntesis y opinión personal del autor.
 
 ## Nota sobre el alcance de esta app
