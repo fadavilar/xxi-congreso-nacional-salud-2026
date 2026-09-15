@@ -398,21 +398,6 @@ p{ margin: 0 0 .8em; }
 .stat-card .confidence-tag{ margin-top:8px; }
 
 /* ============================================================
-   Calculator (brecha SOAT/CUPS)
-   ============================================================ */
-.calculator-box{ background: var(--surface-2); border:1px solid var(--border); border-radius: var(--radius); padding:16px; }
-.calc-row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:10px 0; }
-.calc-row label{ font-size:.85rem; font-weight:600; }
-.calc-input{
-  width:100px; font: inherit; font-size:.9rem; padding:7px 10px; border-radius:8px;
-  border:1px solid var(--border); background: var(--surface); color: var(--text);
-}
-.calc-output{ margin-top:4px; }
-.calc-result{ font-size:.92rem; }
-.calc-result-value{ font-weight:800; font-size:1.3rem; color: var(--primary-2); margin-right:6px; }
-.calc-disclaimer{ font-size:.76rem; color: var(--text-muted); font-style:italic; margin-top:10px; }
-
-/* ============================================================
    Mind map (nota técnica IPS → EPS)
    ============================================================ */
 .mindmap-edge{ fill:none; stroke: var(--border); stroke-width: 1.8; }
@@ -714,7 +699,7 @@ body.focus-mode .breadcrumb,
 body.focus-mode .toolbar,
 body.focus-mode .indicator-source,
 body.focus-mode .cite-tag,
-body.focus-mode .export-actions,
+body.focus-mode .export-panel,
 body.focus-mode .sources-panel,
 body.focus-mode .search-trigger span,
 body.focus-mode .changelog-toggle-row{
@@ -751,12 +736,13 @@ body.focus-mode .container{ max-width: 720px; }
 .sources-panel-list a{ color: var(--primary-2); }
 
 /* ============================================================
-   Per-section export actions
+   Export panel (single control, end of content)
    ============================================================ */
-.export-actions{
-  display:flex; gap:8px; flex-wrap:wrap; margin-top:18px; padding-top:14px; border-top:1px dashed var(--border);
+.export-panel{
+  margin-top: 24px; padding: 18px; background: var(--surface); border:1px solid var(--border); border-radius: var(--radius);
 }
-.export-actions .btn{ font-size:.78rem; padding:7px 12px; }
+.export-panel h2{ font-size:1rem; margin-bottom:6px; }
+.export-panel-intro{ color: var(--text-muted); font-size:.85rem; margin-bottom:12px; }
 
 /* ============================================================
    Accessible-list toggle for SVG diagrams
@@ -791,14 +777,15 @@ body.focus-mode .container{ max-width: 720px; }
    ============================================================ */
 @media print{
   .site-header, .breadcrumb, .sidebar, .sidebar-scrim, .toolbar, .scroll-top,
-  .search-panel, .shortcuts-panel, .export-actions, .cc-block, .changelog-toggle-row,
+  .search-panel, .shortcuts-panel, .export-panel, .cc-block, .changelog-toggle-row,
   .a11y-list-toggle, .btn, .icon-btn{ display:none !important; }
   .layout{ display:block !important; }
+  /* Only sections currently expanded on screen get printed — collapsed
+     ones are skipped entirely, per the single end-of-page export control. */
+  .acc-item:not(.open){ display:none !important; }
   .acc-panel{ grid-template-rows: 1fr !important; }
   .acc-panel > div{ overflow: visible !important; }
   .acc-item{ break-inside: avoid; border:none !important; box-shadow:none !important; }
-  body.print-single .accordion > .acc-item{ display:none !important; }
-  body.print-single .accordion > .acc-item.print-target{ display:block !important; }
   body{ background:#fff !important; color:#000 !important; }
 }
 

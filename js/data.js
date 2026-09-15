@@ -226,24 +226,6 @@ const DATA = {
   ],
 
   // ------------------------------------------------------------------
-  // Herramientas de decisión — solo se incluyen calculadoras cuya
-  // fórmula es trivial y verificable con datos ya citados (sesión 14).
-  // No se construyen calculadoras que requerirían inventar una
-  // metodología que el congreso no proporcionó (ver Metodología).
-  // ------------------------------------------------------------------
-  tools: {
-    tariffGapCalculator: {
-      title: "Calculadora: brecha de cobertura SOAT frente a CUPS",
-      intro: "Estimación basada en el ratio agregado declarado en el congreso (sesión 14): el tarifario SOAT vigente cubre 3.281 de los 10.024 procedimientos de la Clasificación Única de Procedimientos en Salud (Resolución 2706 de 2025). No es una consulta código por código — el congreso no publicó el listado completo de códigos cubiertos — sino una proyección de cuántos de tus procedimientos frecuentes podrían caer, en promedio, fuera de esa cobertura.",
-      soatCodes: 3281,
-      cupsTotal: 10024,
-      session: 14,
-      confidence: "escenario",
-      disclaimer: "Estimación agregada, no una verificación código por código. Para confirmar la cobertura de un procedimiento específico, consulte el tarifario SOAT vigente o el manual tarifario de su contraparte."
-    }
-  },
-
-  // ------------------------------------------------------------------
   // Recomendaciones — síntesis propia del autor, ancladas en puntos de
   // apalancamiento del diagnóstico causal. No son conclusiones del
   // congreso ni posiciones de Consultorsalud o de los ponentes citados.
@@ -428,10 +410,10 @@ const DATA = {
         },
       ],
       template: {
-        filename: "nota-tecnica-ips-eps-plantilla.docx",
-        path: "downloads/nota-tecnica-ips-eps-plantilla.docx",
-        label: "Descargar plantilla (.docx)",
-        note: "Plantilla editable con los 8 elementos de este mapa mental, guías de qué completar en cada sección y tablas de costo/riesgo listas para llenar. No es un formato oficial ni exigido por ninguna EPS o entidad regulatoria — es una guía práctica basada en esta síntesis."
+        filename: "nota-tecnica-ips-eps-plantilla.xlsx",
+        path: "downloads/nota-tecnica-ips-eps-plantilla.xlsx",
+        label: "Descargar plantilla (.xlsx)",
+        note: "Plantilla editable en Excel con los 8 elementos de este mapa mental, una hoja por sección con guías de qué completar y tablas de costos/riesgo listas para llenar (con subtotales calculados). No es un formato oficial ni exigido por ninguna EPS o entidad regulatoria — es una guía práctica basada en esta síntesis."
       }
     },
   },

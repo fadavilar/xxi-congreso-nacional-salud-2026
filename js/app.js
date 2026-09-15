@@ -647,42 +647,6 @@
     body.appendChild(el("div",{class:"data-table-actions", style:"margin-top:16px"},[
       makeDownloadLink("cifras_clave.csv", ["Eje","Valor","Indicador","Detalle / fuente"], allFigures)
     ]));
-
-    renderTariffGapCalculator(body);
-  }
-  function renderTariffGapCalculator(body){
-    const tool = DATA.tools && DATA.tools.tariffGapCalculator;
-    if(!tool) return;
-    const box = el("div",{class:"indicator-block calculator-box"});
-    box.appendChild(el("div",{class:"indicator-head"},[
-      el("h4",{},[tool.title]),
-      confidenceTag(tool.confidence),
-    ]));
-    box.appendChild(el("p",{style:"font-size:.85rem;color:var(--text-muted)"},[tool.intro]));
-
-    const row = el("div",{class:"calc-row"});
-    const label = el("label",{for:"calc-proc-count"},["¿Cuántos procedimientos frecuentes maneja?"]);
-    const input = el("input",{type:"number", id:"calc-proc-count", min:"1", step:"1", value:"100", class:"calc-input"});
-    const output = el("div",{class:"calc-output"});
-    function update(){
-      const n = Math.max(0, parseInt(input.value,10) || 0);
-      const ratio = tool.soatCodes / tool.cupsTotal;
-      const outside = Math.round(n * (1 - ratio));
-      output.innerHTML = "";
-      output.appendChild(el("div",{class:"calc-result"},[
-        el("span",{class:"calc-result-value"},[String(outside)]),
-        el("span",{},[" de "+n+" procedimientos podrían caer, en promedio, fuera de la cobertura SOAT (~"+(Math.round((1-ratio)*1000)/10)+"%)."]),
-      ]));
-    }
-    input.addEventListener("input", update);
-    row.appendChild(label);
-    row.appendChild(input);
-    box.appendChild(row);
-    box.appendChild(output);
-    update();
-    box.appendChild(el("p",{class:"calc-disclaimer"},[tool.disclaimer]));
-    box.appendChild(el("p",{class:"indicator-source"},["Fuente: sesión "+tool.session+" — "+(sessionById(tool.session)?sessionById(tool.session).speaker:"")]));
-    body.appendChild(box);
   }
 
   /* ============================================================
@@ -1325,79 +1289,16 @@
   }
 
   /* ============================================================
-     EXPORT: Markdown + Print/PDF per section
+     EXPORT: single "export to PDF" control, visible sections only.
+     One control at the end of the content (not one per section) —
+     it prints exactly whichever sections are currently expanded via
+     the browser's print dialog; collapsed sections are excluded by
+     the @media print rule ".acc-item:not(.open){ display:none }".
      ============================================================ */
-  function domToMarkdown(node){
-    let out = "";
-    node.childNodes.forEach(child=>{
-      if(child.nodeType === 3){ out += child.textContent; return; }
-      if(child.nodeType !== 1) return;
-      const tag = child.tagName.toLowerCase();
-      if(tag==="h3" || tag==="h4"){ out += "\n### "+child.textContent.trim()+"\n\n"; }
-      else if(tag==="p"){ out += child.textContent.trim()+"\n\n"; }
-      else if(tag==="ul" || tag==="ol"){
-        child.querySelectorAll(":scope > li").forEach(li=>{ out += "- "+li.textContent.trim().replace(/\s+/g," ")+"\n"; });
-        out += "\n";
-      } else if(tag==="table"){
-        const rows = [...child.querySelectorAll("tr")];
-        rows.forEach((tr,ri)=>{
-          const cells = [...tr.children].map(c=>c.textContent.trim().replace(/\|/g,"/").replace(/\s+/g," "));
-          out += "| "+cells.join(" | ")+" |\n";
-          if(ri===0) out += "|"+cells.map(()=>" --- ").join("|")+"|\n";
-        });
-        out += "\n";
-      } else if(tag==="button" || tag==="svg" || tag==="input"){
-        // skip interactive chrome
-      } else {
-        out += domToMarkdown(child);
-      }
-    });
-    return out;
-  }
-  function exportSectionMarkdown(section){
-    const body = document.getElementById("body-"+section.id);
-    if(!body) return;
-    const clone = body.cloneNode(true);
-    clone.querySelectorAll(".export-actions, .a11y-list-toggle, .data-table-actions, .a11y-list, .diagram-tooltip, .avatar").forEach(n=>n.remove());
-    let md = "# "+section.title+"\n\n"+md_escapeFrontmatter(section)+"\n";
-    md += domToMarkdown(clone);
-    md += "\n---\nFuente: XXI Congreso Nacional de Salud 2026 — "+location.href.split("#")[0]+"#sec-"+section.id+"\n";
-    const blob = new Blob([md], {type:"text/markdown;charset=utf-8;"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url; a.download = section.id+".md";
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(()=> URL.revokeObjectURL(url), 2000);
-  }
-  function md_escapeFrontmatter(section){
-    return "*"+section.sub+"*\n";
-  }
-  function printSection(sectionId){
-    openSection(sectionId);
-    const item = document.getElementById("sec-"+sectionId);
-    if(!item) return;
-    item.classList.add("print-target");
-    document.body.classList.add("print-single");
-    window.print();
-  }
-  function initExportCleanup(){
-    window.addEventListener("afterprint", ()=>{
-      document.body.classList.remove("print-single");
-      document.querySelectorAll(".acc-item.print-target").forEach(n=>n.classList.remove("print-target"));
-    });
-  }
-  function addExportActions(){
-    SECTIONS.forEach(s=>{
-      const body = document.getElementById("body-"+s.id);
-      if(!body) return;
-      const row = el("div",{class:"export-actions"});
-      const mdBtn = el("button",{class:"btn", type:"button"},["Exportar Markdown"]);
-      mdBtn.addEventListener("click", ()=> exportSectionMarkdown(s));
-      const printBtn = el("button",{class:"btn", type:"button"},["Imprimir / PDF"]);
-      printBtn.addEventListener("click", ()=> printSection(s.id));
-      row.appendChild(mdBtn); row.appendChild(printBtn);
-      body.appendChild(row);
-    });
+  function initGlobalExport(){
+    const btn = document.getElementById("export-pdf-btn");
+    if(!btn) return;
+    btn.addEventListener("click", ()=> window.print());
   }
 
   /* ============================================================
@@ -1419,7 +1320,7 @@
 
     renderSidebarTOC();
     renderSourcesPanel();
-    addExportActions();
+    initGlobalExport();
     initChangelog();
 
     document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
@@ -1437,7 +1338,6 @@
     initFocusMode();
     initScrollTop();
     initSourcesPanelToggle();
-    initExportCleanup();
     initScrollspy();
   }
 

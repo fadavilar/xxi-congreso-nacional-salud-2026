@@ -13,7 +13,7 @@ Síntesis interactiva de un artículo de LinkedIn de autoría propia sobre el XX
 5. **Agenda completa** — tabla filtrable de las 22 sesiones (dos jornadas), con horario, foto o iniciales del ponente, y cargo.
 6. **Recomendaciones** — síntesis propia del autor, ancladas en los puntos de apalancamiento del diagnóstico causal.
 7. **Lagunas de evidencia** — qué no se presentó o quedó sin resolver en el congreso.
-8. **Nota técnica** — nota de política pública (contexto → brecha → opciones → próximos pasos) sobre la brecha entre intervención y implementación a nivel de IPS, más una herramienta práctica anidada con el taller de notas técnicas del congreso (sesión 22): un mapa mental interactivo de los elementos de una nota técnica de proveedor a EPS y una plantilla descargable en Word.
+8. **Nota técnica** — nota de política pública (contexto → brecha → opciones → próximos pasos) sobre la brecha entre intervención y implementación a nivel de IPS, más una herramienta práctica anidada con el taller de notas técnicas del congreso (sesión 22): un mapa mental interactivo de los elementos de una nota técnica de proveedor a EPS y una plantilla descargable en Excel.
 9. **Mi lectura** — síntesis y opinión personal del autor.
 10. **Metodología y fuentes** — cómo se elaboró esta síntesis y sus límites declarados.
 
@@ -33,25 +33,24 @@ Solo se muestran retratos oficiales tomados del sitio institucional propio de ca
 - **Modo de lectura enfocada** (oculta índice, breadcrumb y chrome secundario) y **botón "volver arriba"**.
 - **Accesibilidad WCAG AA**: foco visible en todo elemento interactivo, `role="region"`/`aria-labelledby` en cada sección del acordeón, tablas con `<caption>` accesible, nodos de los diagramas SVG operables por teclado (Tab + Enter/Espacio), y una vista alterna "Ver como lista" para cada diagrama (el diagnóstico causal y el mapa mental de notas técnicas) como equivalente textual completo.
 - **Trazabilidad de datos**: cada cifra clave y cada nodo del diagrama causal lleva una etiqueta de confiabilidad (*Declarado en escenario* / *Nota del autor*), un **Panel de fuentes** agrega todas las URLs públicas citadas, y un **historial de cambios** (changelog) con fecha real de cada publicación.
-- **Exportación por sección**: cada una de las 10 secciones puede exportarse a **Markdown** (descarga `.md`) o **imprimirse a PDF** (usa el diálogo de impresión del navegador con una hoja de estilos dedicada — sin dependencias ni librerías).
-- **Calculadora de brecha SOAT/CUPS** en Cifras clave, basada en el ratio agregado declarado en el congreso (no en una consulta código por código, que el congreso no publicó).
+- **Exportación a PDF**: un único control al final del contenido (no uno por sección) exporta a PDF, vía el diálogo de impresión del navegador, únicamente las secciones que tengas expandidas en ese momento — las colapsadas se excluyen automáticamente. Sin Markdown ni librerías externas.
 
 ## Stack técnico
 
-HTML/CSS/JS sin build step ni frameworks (fácil de servir con GitHub Pages), siguiendo el mismo sistema de diseño que [gobernanza-salud-publica-colombia](https://github.com/fadavilar/gobernanza-salud-publica-colombia) (tema claro/oscuro persistente, acordeones, tablas filtrables con exportación a CSV/Markdown).
+HTML/CSS/JS sin build step ni frameworks (fácil de servir con GitHub Pages), siguiendo el mismo sistema de diseño que [gobernanza-salud-publica-colombia](https://github.com/fadavilar/gobernanza-salud-publica-colombia) (tema claro/oscuro persistente, acordeones, tablas filtrables con exportación a CSV).
 
-- `index.html` — estructura, shell de dos columnas (índice + contenido), buscador y paneles de ayuda/fuentes.
+- `index.html` — estructura, shell de dos columnas (índice + contenido), buscador, paneles de ayuda/fuentes y el control único de exportación.
 - `css/style.css` — sistema de diseño (tokens de color claro/oscuro, acordeones, sidebar, buscador, responsive, impresión).
 - `js/data.js` — todo el contenido editorial (diagnóstico causal, ejes temáticos, cifras clave, agenda, recomendaciones, lagunas, nota técnica, lectura, metodología, fotos de ponentes, changelog, etiquetas de confiabilidad).
-- `js/app.js` — renderizado, tema claro/oscuro persistente, acordeones, diagramas SVG interactivos y accesibles, índice/scrollspy, buscador, atajos de teclado, exportación a Markdown/PDF, calculadora.
+- `js/app.js` — renderizado, tema claro/oscuro persistente, acordeones, diagramas SVG interactivos y accesibles, índice/scrollspy, buscador, atajos de teclado, exportación a PDF.
 - `img/speakers/` — retratos oficiales de funcionarios públicos (ver "Fotos de ponentes" abajo).
-- `downloads/nota-tecnica-ips-eps-plantilla.docx` — plantilla descargable de nota técnica de proveedor a EPS (sección "Nota técnica").
+- `downloads/nota-tecnica-ips-eps-plantilla.xlsx` — plantilla descargable en Excel (una hoja por sección, con subtotal de costos calculado) de nota técnica de proveedor a EPS (sección "Nota técnica").
 
 Para editar contenido, generalmente basta con modificar `js/data.js`; el resto se renderiza automáticamente.
 
 ### Alcance de esta ronda (Fase 1 de la mejora en 5 frentes)
 
-Esta actualización cubre las funcionalidades de **alta prioridad** pedidas por el autor: navegación, buscador, accesibilidad, trazabilidad de fuentes y exportación. Quedan pendientes para una siguiente ronda (ya diseñadas, no implementadas): reorganización del contenido por conceptos con matriz de relaciones, comparadores adicionales, más plantillas descargables y un buscador de cifras por rango (prioridad media); y un mapa tipo grafo/constelación, modo resumen de una página y autodiagnóstico para IPS/aseguradores (prioridad baja). No se construyeron comparadores ni calculadoras que habrían requerido inventar datos o metodologías que el congreso no proporcionó (ver Metodología y fuentes en la app).
+Esta actualización cubre las funcionalidades de **alta prioridad** pedidas por el autor: navegación, buscador, accesibilidad, trazabilidad de fuentes y exportación. Quedan pendientes para una siguiente ronda (ya diseñadas, no implementadas): reorganización del contenido por conceptos con matriz de relaciones, comparadores adicionales, más plantillas descargables y un buscador de cifras por rango (prioridad media); y un mapa tipo grafo/constelación, modo resumen de una página y autodiagnóstico para IPS/aseguradores (prioridad baja). No se construyeron comparadores ni calculadoras que habrían requerido inventar datos o metodologías que el congreso no proporcionó — incluida la calculadora de brecha SOAT/CUPS de la primera ronda de esta fase, retirada después por no aportar valor más allá de una multiplicación porcentual (ver Metodología y fuentes en la app).
 
 ## Autor
 
