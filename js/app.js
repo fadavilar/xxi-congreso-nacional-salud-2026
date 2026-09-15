@@ -1356,17 +1356,6 @@
   }
 
   /* ============================================================
-     CHANGELOG
-     ============================================================ */
-  function initChangelog(){
-    const body = document.getElementById("changelog-body");
-    const list = el("ul",{class:"changelog-list"});
-    (DATA.changelog||[]).forEach(c=> list.appendChild(el("li",{},[ el("time",{},[c.date]), el("span",{},[c.summary]) ])));
-    body.appendChild(list);
-    document.getElementById("changelog-toggle").addEventListener("click", ()=>{ body.hidden = !body.hidden; });
-  }
-
-  /* ============================================================
      EXPORT: single "export to PDF" control, visible sections only.
      One control at the end of the content (not one per section) —
      it prints exactly whichever sections are currently expanded via
@@ -1400,7 +1389,6 @@
     renderSidebarTOC();
     renderSourcesPanel();
     initGlobalExport();
-    initChangelog();
 
     document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
     document.getElementById("expand-all").addEventListener("click", ()=> setAllSections(true));

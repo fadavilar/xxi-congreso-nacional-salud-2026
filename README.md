@@ -30,7 +30,7 @@ Solo se muestran retratos oficiales tomados del sitio institucional propio de ca
 - **Atajos de teclado** documentados en un panel de ayuda (`?`): `/` buscar, `Esc` cerrar, `↑`/`↓` navegar resultados, `Enter` ir al resultado.
 - **Modo de lectura enfocada** (oculta índice, breadcrumb y chrome secundario) y **botón "volver arriba"**.
 - **Accesibilidad WCAG AA**: foco visible en todo elemento interactivo, `role="region"`/`aria-labelledby` en cada sección del acordeón, tablas con `<caption>` accesible, nodos de los diagramas SVG operables por teclado (Tab + Enter/Espacio), y una vista alterna "Ver como lista" para cada diagrama (el diagnóstico causal y el mapa mental de notas técnicas) como equivalente textual completo.
-- **Trazabilidad de datos**: cada cifra clave y cada nodo del diagrama causal lleva una etiqueta de confiabilidad (*Declarado en escenario* / *Nota del autor*), un **Panel de fuentes** agrega todas las URLs públicas citadas, y un **historial de cambios** (changelog) con fecha real de cada publicación.
+- **Trazabilidad de datos**: cada cifra clave y cada nodo del diagrama causal lleva una etiqueta de confiabilidad (*Declarado en escenario* / *Nota del autor*), y un **Panel de fuentes** agrega todas las URLs públicas citadas.
 - **Exportación a PDF**: un único control al final del contenido (no uno por sección) exporta a PDF, vía el diálogo de impresión del navegador, únicamente las secciones que tengas expandidas en ese momento — las colapsadas se excluyen automáticamente. Sin Markdown ni librerías externas.
 
 ## Stack técnico
@@ -39,7 +39,7 @@ HTML/CSS/JS sin build step ni frameworks (fácil de servir con GitHub Pages), si
 
 - `index.html` — estructura, shell de dos columnas (índice + contenido), buscador, paneles de ayuda/fuentes y el control único de exportación.
 - `css/style.css` — sistema de diseño (tokens de color claro/oscuro, acordeones, sidebar, buscador, responsive, impresión).
-- `js/data.js` — todo el contenido editorial (diagnóstico causal, ejes temáticos, cifras clave, agenda, recomendaciones, lagunas, nota técnica, lectura, metodología, fotos de ponentes, changelog, etiquetas de confiabilidad).
+- `js/data.js` — todo el contenido editorial (diagnóstico causal, ejes temáticos, cifras clave, agenda, recomendaciones, lagunas, nota técnica, lectura, metodología, fotos de ponentes, etiquetas de confiabilidad).
 - `js/app.js` — renderizado, tema claro/oscuro persistente, acordeones, diagramas SVG interactivos y accesibles, índice/scrollspy, buscador, atajos de teclado, exportación a PDF.
 - `img/speakers/` — retratos oficiales de funcionarios públicos (ver "Fotos de ponentes" abajo).
 - `downloads/nota-tecnica-ips-eps-plantilla.xlsx` — plantilla descargable en Excel: hoja "Guía" (referencia con la sesión del congreso de cada elemento), "Ingreso de valores" (los 8 elementos con un ejemplo prediligenciado, listo para reemplazar) y "Resumen" (costo total, margen y punto de equilibrio calculados por fórmula a partir de lo diligenciado).

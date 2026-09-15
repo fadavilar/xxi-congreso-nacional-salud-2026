@@ -713,8 +713,7 @@ body.focus-mode .indicator-source,
 body.focus-mode .cite-tag,
 body.focus-mode .export-panel,
 body.focus-mode .sources-panel,
-body.focus-mode .search-trigger span,
-body.focus-mode .changelog-toggle-row{
+body.focus-mode .search-trigger span{
   display:none !important;
 }
 body.focus-mode .layout{ display:block; }
@@ -775,21 +774,11 @@ body.focus-mode .container{ max-width: 720px; }
 .rec-board-cell .k{ font-size:.66rem; text-transform:uppercase; letter-spacing:.04em; color: var(--text-muted); font-weight:700; margin-bottom:4px; }
 
 /* ============================================================
-   Changelog
-   ============================================================ */
-.changelog-toggle-row{ margin: 4px 0 0; }
-.changelog-body{ margin-top:10px; }
-.changelog-body[hidden]{ display:none; }
-.changelog-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
-.changelog-list li{ display:flex; gap:10px; font-size:.82rem; }
-.changelog-list time{ flex:none; color: var(--text-muted); font-variant-numeric: tabular-nums; }
-
-/* ============================================================
    Print
    ============================================================ */
 @media print{
   .site-header, .breadcrumb, .sidebar, .sidebar-scrim, .toolbar, .scroll-top,
-  .search-panel, .shortcuts-panel, .export-panel, .cc-block, .changelog-toggle-row,
+  .search-panel, .shortcuts-panel, .export-panel, .cc-block,
   .a11y-list-toggle, .btn, .icon-btn{ display:none !important; }
   .layout{ display:block !important; }
   /* Only sections currently expanded on screen get printed — collapsed

@@ -523,20 +523,6 @@ const DATA = {
       conclusion: "Taller de cierre sobre modelación contractual avanzada para IPS: costos, notas técnicas y contratos prospectivos." },
   ],
 
-  // ------------------------------------------------------------------
-  // Changelog — historial real de publicación (fechas de los commits
-  // del repositorio), más reciente primero.
-  // ------------------------------------------------------------------
-  changelog: [
-    { date: "2026-09-15", summary: "Lagunas de evidencia reescritas con tono imparcial, distinguiendo temas ausentes de la agenda de temas tratados de forma incompleta, con enlaces a la revisión de gobernanza previa del autor y al marco de resultados de implementación; nota técnica y plantilla descargable fundamentadas en la metodología oficial de MinSalud (Decreto 780 de 2016, desarrollado en 2022) y contrastadas con la Nota Técnica País." },
-    { date: "2026-09-15", summary: "Reorganización como documento de síntesis (resumen, introducción, materiales y métodos, resultados, discusión y recomendaciones, conclusión); agenda con conclusión por sesión y columna combinada de ponente/cargo; corrección de citas de sesión mal asignadas (17-21); plantilla de nota técnica reconstruida en Excel (Guía, Ingreso de valores, Resumen con fórmulas y ejemplo prediligenciado); calculadora SOAT/CUPS retirada; exportación consolidada solo a PDF." },
-    { date: "2026-09-15", summary: "Navegación por índice lateral, buscador en vivo, atajos de teclado, modo de lectura enfocada, etiquetas de confiabilidad de datos, panel de fuentes, exportación a Markdown/PDF y mejoras de accesibilidad (WCAG AA)." },
-    { date: "2026-09-15", summary: "Mapa mental interactivo y plantilla descargable en Word para notas técnicas de proveedor a EPS, anidados con la sesión 22 (taller de notas técnicas)." },
-    { date: "2026-09-15", summary: "Nota técnica sobre la brecha entre intervención e implementación a nivel de IPS, con opciones de cierre y marco de resultados de implementación." },
-    { date: "2026-09-15", summary: "Diagnóstico causal (bucles R1/B1), recomendaciones, lagunas de evidencia y avatares de ponentes (fotos oficiales para funcionarios públicos, iniciales para el resto)." },
-    { date: "2026-09-15", summary: "Publicación inicial: explorador interactivo del XXI Congreso Nacional de Salud 2026 (ejes temáticos, cifras clave, agenda completa, metodología)." },
-  ],
-
   methodology: {
     note: "Este artículo se elaboró a partir de la agenda oficial del XXI Congreso Nacional de Salud, anotaciones propias del autor durante las sesiones del 10 y 11 de septiembre de 2026, y la cobertura publicada por Consultorsalud en consultorsalud.com, contrastando cifras entre fuentes. No se incluyó ningún dato que no pudiera verificarse en estas fuentes.",
     sources: [
