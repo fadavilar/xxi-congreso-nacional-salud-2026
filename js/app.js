@@ -134,6 +134,7 @@
       subs: [
         { id:"resultados-diagnostico", label:"Diagnóstico causal" },
         ...DATA.categories.map(c=>({ id:"eje-"+c.id, label:"Eje "+c.id+" — "+c.title })),
+        { id:"resultados-mapa", label:"Mapa de constelación (ejes × sesiones)" },
         { id:"resultados-cifras", label:"Cifras clave" },
         ...DATA.keyFigureGroups.map((g,i)=>({ id:"cifras-grupo-"+i, label:g.title })),
       ] },
@@ -143,6 +144,7 @@
         { id:"discusion-lagunas", label:"Lagunas de evidencia" },
         { id:"discusion-nota-tecnica", label:"Nota técnica: de la intervención a la implementación" },
         { id:"nota-tecnica-herramienta", label:"Herramienta práctica: mapa mental + plantilla" },
+        { id:"nota-tecnica-autodiagnostico", label:"Autodiagnóstico rápido IPS/asegurador" },
       ] },
     { id:"conclusion", num:"06", title:"Conclusión", sub:"Mi lectura — síntesis y reflexión propia del autor", open:false },
   ];
@@ -595,6 +597,221 @@
   }
 
   /* ============================================================
+     RENDER: 04 Resultados — Mapa de constelación (ejes × sesiones)
+     Segundo anillo radial: eso derivado exclusivamente de
+     DATA.categories[].codes[].studies (números de sesión reales) y
+     DATA.agenda — sin datos nuevos, sin fabricación.
+     ============================================================ */
+  function computeConstellationLayout(){
+    const W = 920, H = 920, cx = W/2, cy = H/2;
+    const R_INNER = 150, R_OUTER = 380;
+    const axes = DATA.categories;
+    const nAxes = axes.length;
+
+    const axisPos = {};
+    axes.forEach((cat,i)=>{
+      const angle = -Math.PI/2 + i*(2*Math.PI/nAxes);
+      axisPos[cat.id] = { x: cx+R_INNER*Math.cos(angle), y: cy+R_INNER*Math.sin(angle) };
+    });
+
+    // Flatten+dedupe codes[].studies per axis -> sessionAxes: n -> [axisId,...]
+    // (a session could in principle back more than one axis, even though in
+    // the current data every session happens to belong to exactly one).
+    const sessionAxes = {};
+    axes.forEach(cat=>{
+      const seen = new Set();
+      cat.codes.forEach(code=> code.studies.forEach(n=>{
+        if(seen.has(n)) return; seen.add(n);
+        (sessionAxes[n] = sessionAxes[n]||[]).push(cat.id);
+      }));
+    });
+
+    // Primary axis per session = first axis (A..E order) citing it, used only
+    // to pick an angular "home sector" — tooltips/edges still use the FULL
+    // sessionAxes list so any cross-axis link would never be hidden.
+    const byAxis = {}; axes.forEach(c=> byAxis[c.id]=[]);
+    Object.keys(sessionAxes).forEach(nStr=>{
+      const n = Number(nStr);
+      byAxis[sessionAxes[n][0]].push(n);
+    });
+    axes.forEach(c=> byAxis[c.id].sort((a,b)=>a-b));
+
+    const sessionPos = {};
+    axes.forEach((cat,i)=>{
+      const sector = 2*Math.PI/nAxes;
+      const start = -Math.PI/2 + i*sector - sector/2;
+      const sessions = byAxis[cat.id];
+      const m = sessions.length;
+      const pad = sector*0.15;
+      sessions.forEach((n,j)=>{
+        const t = m<=1 ? 0.5 : j/(m-1);
+        const angle = start+pad + t*(sector-2*pad);
+        sessionPos[n] = { x: cx+R_OUTER*Math.cos(angle), y: cy+R_OUTER*Math.sin(angle) };
+      });
+    });
+    return { W, H, axisPos, sessionPos, sessionAxes };
+  }
+
+  function buildConstellationSVG(){
+    const svgNS = "http://www.w3.org/2000/svg";
+    const layout = computeConstellationLayout();
+    const { W, H, axisPos, sessionPos, sessionAxes } = layout;
+
+    const svg = document.createElementNS(svgNS,"svg");
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    svg.setAttribute("width","100%");
+    svg.setAttribute("role","img");
+    svg.setAttribute("aria-label","Mapa de constelación: los 5 ejes temáticos y las 22 sesiones del congreso que los respaldan");
+
+    // Edges: axis -> every session it cites (primary = solid, any additional
+    // axis for the same session = dashed "secondary" edge).
+    Object.keys(sessionAxes).forEach(nStr=>{
+      const n = Number(nStr);
+      const sp = sessionPos[n];
+      sessionAxes[nStr].forEach((axisId, i)=>{
+        const ap = axisPos[axisId];
+        const path = document.createElementNS(svgNS,"path");
+        path.setAttribute("d", `M ${ap.x} ${ap.y} L ${sp.x} ${sp.y}`);
+        path.setAttribute("class","edge-path"+(i===0?"":" edge-secondary"));
+        svg.appendChild(path);
+      });
+    });
+
+    // Axis nodes (inner ring)
+    DATA.categories.forEach(cat=>{
+      const p = axisPos[cat.id];
+      const g = document.createElementNS(svgNS,"g");
+      g.setAttribute("class","node-box axis-node "+cat.color);
+      const words = wrapLabel(cat.title, 14);
+      const boxW = 150, lineH = 13;
+      const boxH = 28 + words.length*lineH;
+      let html = `<rect x="${p.x-boxW/2}" y="${p.y-boxH/2}" width="${boxW}" height="${boxH}" rx="12"></rect>`;
+      html += `<text x="${p.x}" y="${p.y-boxH/2+16}" text-anchor="middle" font-weight="800" font-size="11">Eje ${escapeXML(cat.id)}</text>`;
+      words.forEach((w,i)=>{
+        html += `<text x="${p.x}" y="${p.y-boxH/2+16+(i+1)*lineH}" text-anchor="middle">${escapeXML(w)}</text>`;
+      });
+      g.innerHTML = html;
+      attachAxisNodeTooltip(g, cat, sessionAxes);
+      svg.appendChild(g);
+    });
+
+    // Session nodes (outer ring)
+    Object.keys(sessionPos).forEach(nStr=>{
+      const n = Number(nStr);
+      const p = sessionPos[n];
+      const g = document.createElementNS(svgNS,"g");
+      g.setAttribute("class","node-box session-node");
+      const r = 15;
+      let html = `<circle cx="${p.x}" cy="${p.y}" r="${r}"></circle>`;
+      html += `<text x="${p.x}" y="${p.y+4}" text-anchor="middle">${n}</text>`;
+      g.innerHTML = html;
+      attachSessionNodeTooltip(g, n, sessionAxes[nStr]||[]);
+      svg.appendChild(g);
+    });
+
+    svg.addEventListener("mouseleave", scheduleHideTooltip);
+    return svg;
+  }
+  function axisSessionsList(cat, sessionAxes){
+    const sessions = [];
+    Object.keys(sessionAxes).forEach(nStr=>{
+      if(sessionAxes[nStr].indexOf(cat.id)>=0) sessions.push(Number(nStr));
+    });
+    sessions.sort((a,b)=>a-b);
+    return sessions;
+  }
+  function axisNodeTooltipHTML(cat, sessionAxes){
+    const sessions = axisSessionsList(cat, sessionAxes);
+    let html = `<h5>Eje ${escapeXML(cat.id)} — ${escapeXML(cat.title)}</h5>`;
+    html += `<p>Sesiones que respaldan este eje: `;
+    html += sessions.map(n=>{ const s=sessionById(n); return s?`"${escapeXML(s.tag)}"`:`sesión ${n}`; }).join(" · ");
+    html += `</p>`;
+    return html;
+  }
+  function sessionNodeTooltipHTML(n, axisIds){
+    const s = sessionById(n);
+    if(!s) return `<h5>Sesión ${n}</h5>`;
+    let html = `<h5>${escapeXML(s.title)}</h5>`;
+    html += `<p style="color:var(--text-muted)">${escapeXML(s.day)} · ${escapeXML(s.time)}</p>`;
+    html += `<p>${escapeXML(s.speaker)} — ${escapeXML(s.role)}</p>`;
+    if(s.conclusion) html += `<p>${escapeXML(s.conclusion)}</p>`;
+    if(axisIds.length){
+      html += `<p>Eje${axisIds.length>1?"s":""}: ` + axisIds.map(id=>{
+        const c = DATA.categories.find(c=>c.id===id);
+        return c ? `<span class="chip ${escapeXML(c.color)}">Eje ${escapeXML(id)}</span>` : id;
+      }).join(" ") + `</p>`;
+    }
+    return html;
+  }
+  function attachAxisNodeTooltip(gEl, cat, sessionAxes){
+    const show = ()=>{
+      cancelHideTooltip();
+      document.querySelectorAll(".node-box").forEach(n=>n.classList.remove("active"));
+      gEl.classList.add("active");
+      showDiagramTooltip(gEl, axisNodeTooltipHTML(cat, sessionAxes));
+    };
+    makeSvgFocusable(gEl, "Eje "+cat.id+" — "+cat.title);
+    gEl.addEventListener("mouseenter", show);
+    gEl.addEventListener("focus", show);
+    gEl.addEventListener("click", (e)=>{ e.stopPropagation(); show(); });
+    gEl.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); show(); } });
+  }
+  function attachSessionNodeTooltip(gEl, n, axisIds){
+    const s = sessionById(n);
+    const show = ()=>{
+      cancelHideTooltip();
+      document.querySelectorAll(".node-box").forEach(node=>node.classList.remove("active"));
+      gEl.classList.add("active");
+      showDiagramTooltip(gEl, sessionNodeTooltipHTML(n, axisIds));
+    };
+    makeSvgFocusable(gEl, "Sesión "+n+(s?": "+s.title:""));
+    gEl.addEventListener("mouseenter", show);
+    gEl.addEventListener("focus", show);
+    gEl.addEventListener("click", (e)=>{ e.stopPropagation(); show(); });
+    gEl.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); show(); } });
+  }
+  function buildConstellationAccessibleList(){
+    const layout = computeConstellationLayout();
+    const ul = el("ul",{class:"a11y-list"});
+    DATA.categories.forEach(cat=>{
+      const sessions = axisSessionsList(cat, layout.sessionAxes);
+      ul.appendChild(el("li",{},[
+        el("div",{class:"a11y-title"},["Eje "+cat.id+" — "+cat.title]),
+        el("div",{class:"a11y-meta"},[
+          "Sesiones: "+sessions.map(n=>{ const s=sessionById(n); return s?`"${s.tag}"`:"sesión "+n; }).join(" · ")
+        ]),
+      ]));
+    });
+    DATA.agenda.forEach(a=>{
+      const axisIds = layout.sessionAxes[a.n] || [];
+      const li = el("li",{},[
+        el("div",{class:"a11y-title"},["Sesión "+a.n+": "+a.title]),
+        el("div",{class:"a11y-meta"},[a.speaker+" — "+a.role]),
+      ]);
+      if(axisIds.length) li.appendChild(el("div",{class:"a11y-meta"},["Eje(s): "+axisIds.join(", ")]));
+      ul.appendChild(li);
+    });
+    return ul;
+  }
+  function renderConstelacion(){
+    const body = document.getElementById("body-resultados");
+    sectionDivider(body, "resultados-mapa", "Mapa de constelación: ejes × sesiones",
+      "Cómo se conectan los 5 ejes temáticos con las 22 sesiones de la agenda que los respaldan.");
+    body.appendChild(el("p",{},[
+      "Los 5 nodos del centro son los ejes temáticos del congreso; los 22 nodos exteriores son las sesiones de la agenda, agrupadas bajo el eje que cada una respalda (según las citas de la sección anterior). Toca o pasa el cursor sobre un eje para ver todas sus sesiones, o sobre una sesión para ver a qué eje pertenece."
+    ]));
+    const wrap = el("div",{class:"diagram-wrap constellation-wrap"});
+    wrap.appendChild(buildConstellationSVG());
+    const tooltipEl = el("div",{class:"diagram-tooltip",hidden:"hidden"});
+    tooltipEl.addEventListener("mouseenter", cancelHideTooltip);
+    tooltipEl.addEventListener("mouseleave", scheduleHideTooltip);
+    wrap.appendChild(tooltipEl);
+    body.appendChild(wrap);
+    addAccessibleListToggle(body, wrap, buildConstellationAccessibleList());
+    body.appendChild(el("p",{class:"diagram-hint"},["Toca o pasa el cursor sobre un eje o una sesión para ver el detalle."]));
+  }
+
+  /* ============================================================
      RENDER: 03 Cifras clave
      ============================================================ */
   function renderSources(ind){
@@ -931,7 +1148,76 @@
         ]);
         body.appendChild(dlBox);
       }
+
+      if(pt.selfCheck){
+        body.appendChild(el("h4",{id:"nota-tecnica-autodiagnostico", style:"font-size:.86rem;margin-top:26px"},["8. Autodiagnóstico rápido"]));
+        body.appendChild(el("p",{},[pt.selfCheck.intro]));
+        body.appendChild(renderSelfCheckForm(pt.selfCheck, pt.branches));
+      }
     }
+  }
+
+  /* ---------------- Autodiagnóstico rápido (localStorage, sin backend) ---------------- */
+  const SELFCHECK_KEY = "cns_selfcheck_v1";
+  function loadSelfCheckState(){
+    try{ return JSON.parse(localStorage.getItem(SELFCHECK_KEY)||"{}"); }catch(e){ return {}; }
+  }
+  function saveSelfCheckState(state){
+    try{ localStorage.setItem(SELFCHECK_KEY, JSON.stringify(state)); }catch(e){}
+  }
+  function renderSelfCheckForm(selfCheck, branches){
+    const state = loadSelfCheckState();
+    const wrap = el("div",{class:"selfcheck-wrap"});
+    const resultBox = el("div",{class:"outcome selfcheck-result"});
+
+    function computeAndRender(){
+      let sum = 0, answered = 0;
+      selfCheck.items.forEach(it=>{
+        const v = state[it.branchId];
+        if(v!==undefined){ answered++; sum += v==="si" ? 1 : v==="parcial" ? 0.5 : 0; }
+      });
+      const pct = sum/selfCheck.items.length;
+      const level = pct>=0.75 ? "alta" : pct>=0.45 ? "media" : "baja";
+      resultBox.innerHTML = "";
+      resultBox.appendChild(el("div",{class:"name"},[
+        "Resultado: "+sum.toFixed(1)+" / "+selfCheck.items.length,
+        el("span",{class:"level-pill "+levelClass(level)},[level]),
+      ]));
+      const noteBits = [];
+      if(answered<selfCheck.items.length) noteBits.push("Responde los "+(selfCheck.items.length-answered)+" elementos restantes.");
+      noteBits.push("Los cortes de nivel (alta/media/baja) son una referencia orientativa propia del autor, no un estándar externo. Autodiagnóstico, no una certificación.");
+      resultBox.appendChild(el("div",{class:"note"},[noteBits.join(" ")]));
+    }
+
+    selfCheck.items.forEach((it,i)=>{
+      const branch = branches.find(b=>b.id===it.branchId);
+      const name = "selfcheck-"+it.branchId;
+      const row = el("div",{class:"selfcheck-item"});
+      row.appendChild(el("div",{class:"selfcheck-statement"},[(i+1)+". "+it.statement]));
+      const optsWrap = el("div",{class:"selfcheck-options", role:"radiogroup", "aria-label":it.statement});
+      [["si","Sí"],["parcial","Parcialmente"],["no","No"]].forEach(([val,label])=>{
+        const id = name+"-"+val;
+        const radio = el("input",{type:"radio", name:name, id:id, value:val});
+        if(state[it.branchId]===val) radio.checked = true;
+        radio.addEventListener("change", ()=>{ state[it.branchId]=val; saveSelfCheckState(state); computeAndRender(); });
+        optsWrap.appendChild(el("span",{class:"selfcheck-opt"},[radio, el("label",{for:id},[label])]));
+      });
+      row.appendChild(optsWrap);
+      if(branch) row.appendChild(el("div",{class:"selfcheck-meta"},["Basado en la rama: "+branch.label]));
+      wrap.appendChild(row);
+    });
+
+    wrap.appendChild(resultBox);
+    const resetBtn = el("button",{class:"btn", type:"button", style:"margin-top:10px"},["Borrar mis respuestas"]);
+    resetBtn.addEventListener("click", ()=>{
+      Object.keys(state).forEach(k=> delete state[k]);
+      saveSelfCheckState(state);
+      wrap.querySelectorAll("input[type=radio]").forEach(r=> r.checked=false);
+      computeAndRender();
+    });
+    wrap.appendChild(resetBtn);
+    computeAndRender();
+    return wrap;
   }
 
   function buildMindMapSVG(pt){
@@ -1196,8 +1482,10 @@
       idx.push({ type:"Laguna", label: gapText.length>90? gapText.slice(0,90)+"…" : gapText, detail:"Lagunas de evidencia", sectionId:"discusion", anchorId:"discusion-lagunas" });
     });
     idx.push({ type:"Sección", label:"Diagnóstico causal", detail:"Bucles R1 (crisis de caja) y B1 (trazabilidad y auditoría)", sectionId:"resultados", anchorId:"resultados-diagnostico" });
+    idx.push({ type:"Sección", label:"Mapa de constelación", detail:"Ejes temáticos × 22 sesiones de la agenda", sectionId:"resultados", anchorId:"resultados-mapa" });
     idx.push({ type:"Sección", label:"Nota técnica", detail:"Intervención vs. implementación en IPS", sectionId:"discusion", anchorId:"discusion-nota-tecnica" });
     idx.push({ type:"Herramienta", label:"Mapa mental: nota técnica IPS → EPS", detail:"Mapa mental y plantilla descargable", sectionId:"discusion", anchorId:"nota-tecnica-herramienta" });
+    idx.push({ type:"Herramienta", label:"Autodiagnóstico rápido IPS/asegurador", detail:"Checklist de 8 elementos con resultado — no validado externamente", sectionId:"discusion", anchorId:"nota-tecnica-autodiagnostico" });
     return idx;
   }
   function openSearch(){
@@ -1320,6 +1608,62 @@
       btn.setAttribute("aria-pressed", on?"true":"false");
     });
   }
+
+  /* ============================================================
+     "RESUMEN DE UNA PÁGINA" vs. "MODO PROFUNDO"
+     Mismo patrón de toggle que el modo de lectura enfocada (una clase
+     en <body> + CSS), pero para PROFUNDIDAD de contenido en vez de
+     chrome secundario. El panel se arma una sola vez al boot, leyendo
+     textualmente contenido que ya existe en DATA — sin prosa nueva.
+     ============================================================ */
+  function renderSummaryPanel(){
+    const root = document.getElementById("summary-panel");
+    if(!root) return;
+    root.appendChild(el("div",{class:"summary-head"},[
+      el("h2",{},["Resumen de una página"]),
+      el("p",{class:"summary-sub"},["Los puntos esenciales del congreso, sin abrir el documento completo."]),
+    ]));
+    root.appendChild(el("p",{},[DATA.intro]));
+    root.appendChild(el("div",{class:"selective-box"},[
+      el("h4",{},["Lo que atraviesa todo el congreso"]),
+      el("h3",{},[DATA.selectiveCategory.title]),
+      el("p",{},[DATA.selectiveCategory.text]),
+    ]));
+    (DATA.causalLoop.loops||[]).forEach(loop=>{
+      root.appendChild(el("div",{class:"card"},[
+        el("strong",{},[loop.title]),
+        el("p",{style:"margin:4px 0 0"},[loop.text]),
+      ]));
+    });
+    root.appendChild(el("h3",{class:"subsection-title", style:"margin-top:18px"},["Recomendaciones principales"]));
+    const recList = el("ol",{class:"gap-list"});
+    DATA.recommendations.slice(0,3).forEach(rec=>{
+      recList.appendChild(el("li",{},[
+        el("strong",{},[rec.title]),
+        el("div",{class:"rec-leverage"},["Punto de apalancamiento: "+rec.leverage]),
+      ]));
+    });
+    root.appendChild(recList);
+    root.appendChild(el("h3",{class:"subsection-title", style:"margin-top:18px"},["Mi lectura"]));
+    root.appendChild(el("p",{},[DATA.reading.text]));
+    const exitLink = el("a",{href:"#"},["Ver documento completo →"]);
+    exitLink.addEventListener("click",(e)=>{ e.preventDefault(); toggleSummaryMode(false); });
+    root.appendChild(el("p",{style:"margin-top:20px"},[exitLink]));
+  }
+  function toggleSummaryMode(forceOn){
+    const btn = document.getElementById("summary-toggle");
+    const on = typeof forceOn === "boolean" ? forceOn : !document.body.classList.contains("summary-mode");
+    document.body.classList.toggle("summary-mode", on);
+    btn.setAttribute("aria-pressed", on?"true":"false");
+    if(on){
+      const panel = document.getElementById("summary-panel");
+      if(panel) panel.scrollIntoView({behavior:"smooth", block:"start"});
+    }
+  }
+  function initSummaryMode(){
+    const btn = document.getElementById("summary-toggle");
+    btn.addEventListener("click", ()=> toggleSummaryMode());
+  }
   function initScrollTop(){
     const btn = document.getElementById("scroll-top");
     window.addEventListener("scroll", ()=>{ btn.hidden = window.scrollY < 600; }, {passive:true});
@@ -1382,6 +1726,7 @@
      ============================================================ */
   function boot(){
     renderHero();
+    renderSummaryPanel();
     buildAccordionShell();
     renderResumen();
     renderIntroduccion();
@@ -1389,6 +1734,7 @@
     renderAgenda();
     renderDiagnostico();
     renderEjes();
+    renderConstelacion();
     renderCifras();
     renderRecomendaciones();
     renderLagunas();
@@ -1412,6 +1758,7 @@
     initShortcutsPanel();
     initKeyboardShortcuts();
     initFocusMode();
+    initSummaryMode();
     initScrollTop();
     initSourcesPanelToggle();
     initScrollspy();

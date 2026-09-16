@@ -38,6 +38,9 @@
       <button class="icon-btn" id="focus-toggle" type="button" aria-label="Modo de lectura enfocada" aria-pressed="false" title="Modo de lectura enfocada">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V5a1 1 0 0 1 1-1h4M20 9V5a1 1 0 0 0-1-1h-4M4 15v4a1 1 0 0 0 1 1h4M20 15v4a1 1 0 0 1-1 1h-4"/></svg>
       </button>
+      <button class="icon-btn" id="summary-toggle" type="button" aria-label="Resumen de una página" aria-pressed="false" title="Resumen de una página">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h9l3 3v13H6z"/><path d="M9 10h6M9 13h6M9 16h4"/></svg>
+      </button>
       <button class="icon-btn theme-toggle" id="theme-toggle" type="button" aria-label="Cambiar modo claro/oscuro" title="Modo claro / oscuro">
         <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.4 4.4l1.7 1.7M17.9 17.9l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.4 19.6l1.7-1.7M17.9 6.1l1.7-1.7"/></svg>
         <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5z"/></svg>
@@ -100,6 +103,8 @@
         <p class="byline" id="byline"></p>
         <div class="stat-grid" id="stat-grid"></div>
       </section>
+
+      <section class="summary-panel" id="summary-panel"></section>
 
       <section class="export-panel export-panel-top" aria-labelledby="export-panel-top-title">
         <h2 id="export-panel-top-title">Exportar</h2>

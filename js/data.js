@@ -459,6 +459,19 @@ const DATA = {
           items: ["Histórico de utilización o facturación (12–24 meses)", "Benchmarks de mercado o de la red", "Memoria de cálculo / hoja de costeo", "Soportes normativos citados"]
         },
       ],
+      selfCheck: {
+        intro: "Autodiagnóstico rápido construido sobre los mismos 8 elementos del mapa mental anterior — no es un instrumento validado externamente ni una certificación, es una lista de verificación práctica del autor sobre la misma base normativa (Decreto 780 de 2016 y el webinar de buenas prácticas de MinSalud citados en \"0. Marco normativo\"). Tus respuestas se guardan solo en este navegador (localStorage); nunca se envían a ningún servidor.",
+        items: [
+          { branchId: 1, statement: "Tenemos codificados en CUPS (procedimientos) y CUM/IUM (medicamentos) todos los servicios que le prestamos a esta EPS, con la población objeto total y la población susceptible de cada uno claramente identificadas." },
+          { branchId: 2, statement: "No basamos nuestras tarifas únicamente en el SOAT, el ISS 2001 u otro tarifario ajeno — tenemos nuestros propios valores de referencia y los usamos solo como contraste." },
+          { branchId: 3, statement: "Conocemos nuestros costos directos, indirectos, fijos y variables por servicio, sin trasladar ineficiencias operativas propias (personal ocioso, demanda inducida no ejecutada) al valor que negociamos con la EPS." },
+          { branchId: 4, statement: "Proyectamos la frecuencia de uso de cada servicio con datos históricos propios (no solo el mínimo de una guía o RIAS) y diferenciamos el riesgo primario del riesgo técnico según lo que realmente pactamos." },
+          { branchId: 5, statement: "La modalidad de pago que tenemos pactada (evento, capitación, paquete, PGP o resultado) está justificada técnicamente y no es solo la que históricamente se ha usado." },
+          { branchId: 6, statement: "Tenemos definidos un corredor de riesgo, un techo y un piso de garantía, y una periodicidad de monitoreo más corta que la vigencia del acuerdo." },
+          { branchId: 7, statement: "Tenemos indicadores de calidad y de oportunidad asociados al pago, con metas claras y conocidas por ambas partes." },
+          { branchId: 8, statement: "Tenemos a la mano el histórico de utilización o facturación de los últimos 12–24 meses y la memoria de cálculo que sustenta nuestra nota técnica." },
+        ]
+      },
       template: {
         filename: "nota-tecnica-ips-eps-plantilla.xlsx",
         path: "downloads/nota-tecnica-ips-eps-plantilla.xlsx",

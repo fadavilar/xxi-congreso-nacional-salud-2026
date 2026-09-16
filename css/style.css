@@ -424,6 +424,21 @@ p{ margin: 0 0 .8em; }
 .template-download .btn{ flex:none; white-space:nowrap; }
 
 /* ============================================================
+   Constellation map (ejes × sesiones)
+   ============================================================ */
+.axis-node.cat-a rect{ stroke: var(--chip-a); }
+.axis-node.cat-b rect{ stroke: var(--chip-b); }
+.axis-node.cat-c rect{ stroke: var(--chip-c); }
+.axis-node.cat-d rect{ stroke: var(--chip-d); }
+.axis-node.cat-e rect{ stroke: var(--chip-e); }
+.axis-node rect{ stroke-width: 2.2; }
+.session-node circle{ fill: var(--surface); stroke: var(--border); stroke-width:1.3; }
+.session-node:hover circle, .session-node.active circle{ stroke: var(--primary-2); stroke-width:2.2; fill: var(--primary-tint); }
+.session-node text{ fill: var(--text); font-size: 10px; font-weight:800; }
+.edge-path.edge-secondary{ stroke-dasharray: 3 3; opacity: .5; }
+.diagram-wrap.constellation-wrap svg{ min-width: 720px; }
+
+/* ============================================================
    Causal diagram
    ============================================================ */
 .diagram-wrap{
@@ -556,6 +571,21 @@ p{ margin: 0 0 .8em; }
 .level-media, .level-media-alta{ background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
 .level-baja, .level-incierta, .level-variable, .level-por{ background: var(--danger-tint); color: var(--danger); }
 .outcome .note{ font-size:.76rem; color: var(--text-muted); margin-top:4px; }
+
+/* ============================================================
+   Autodiagnóstico rápido (checklist con resultado, localStorage)
+   ============================================================ */
+.selfcheck-wrap{ display:flex; flex-direction:column; gap:10px; margin-top:14px; }
+.selfcheck-item{ background: var(--surface); border:1px solid var(--border); border-radius:10px; padding:10px 12px; }
+.selfcheck-statement{ font-size:.86rem; font-weight:600; margin-bottom:8px; }
+.selfcheck-options{ display:flex; gap:16px; flex-wrap:wrap; }
+.selfcheck-opt{ display:inline-flex; align-items:center; gap:5px; font-size:.82rem; }
+.selfcheck-opt label{ cursor:pointer; }
+.selfcheck-meta{ color: var(--text-muted); font-size:.74rem; margin-top:6px; }
+.selfcheck-result{ margin-top:4px; }
+@media (max-width: 480px){
+  .selfcheck-options{ gap:10px; }
+}
 
 /* ============================================================
    Studies table
@@ -719,6 +749,28 @@ body.focus-mode .search-trigger span{
 body.focus-mode .layout{ display:block; }
 body.focus-mode .container{ max-width: 720px; }
 #focus-toggle[aria-pressed="true"]{ background: var(--primary); border-color: var(--primary); color:#fff; }
+
+/* ============================================================
+   "Resumen de una página" mode — mismo patrón que el modo enfocado
+   (clase en <body> + CSS), pero oculta el acordeón completo en vez
+   de solo el chrome secundario, y muestra el panel de síntesis en
+   su lugar.
+   ============================================================ */
+body:not(.summary-mode) .summary-panel{ display:none; }
+body.summary-mode .sidebar,
+body.summary-mode .breadcrumb,
+body.summary-mode .toolbar,
+body.summary-mode .accordion,
+body.summary-mode .export-panel,
+body.summary-mode .sources-panel{
+  display:none !important;
+}
+body.summary-mode .layout{ display:block; }
+body.summary-mode .container{ max-width: 760px; }
+#summary-toggle[aria-pressed="true"]{ background: var(--primary); border-color: var(--primary); color:#fff; }
+.summary-panel{ margin: 24px 0; }
+.summary-head h2{ margin:0; }
+.summary-sub{ color: var(--text-muted); font-size:.85rem; margin-top:2px; }
 
 /* ============================================================
    Confidence tags (trazabilidad de datos)
