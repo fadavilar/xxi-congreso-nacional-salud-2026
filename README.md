@@ -31,7 +31,7 @@ Solo se muestran retratos oficiales tomados del sitio institucional propio de ca
 - **Modo de lectura enfocada** (oculta índice, breadcrumb y chrome secundario) y **botón "volver arriba"**.
 - **Accesibilidad WCAG AA**: foco visible en todo elemento interactivo, `role="region"`/`aria-labelledby` en cada sección del acordeón, tablas con `<caption>` accesible, nodos de los diagramas SVG operables por teclado (Tab + Enter/Espacio), y una vista alterna "Ver como lista" para cada diagrama (el diagnóstico causal y el mapa mental de notas técnicas) como equivalente textual completo.
 - **Trazabilidad de datos**: cada cifra clave y cada nodo del diagrama causal lleva una etiqueta de confiabilidad (*Declarado en escenario* / *Nota del autor*), y un **Panel de fuentes** agrega todas las URLs públicas citadas.
-- **Exportación a PDF**: un único control al final del contenido (no uno por sección) exporta a PDF, vía el diálogo de impresión del navegador, únicamente las secciones que tengas expandidas en ese momento — las colapsadas se excluyen automáticamente. Sin Markdown ni librerías externas.
+- **Exportación a PDF**: el mismo control (no uno por sección) se repite al inicio y al final del contenido para que sea fácil de encontrar en móvil; exporta a PDF, vía el diálogo de impresión del navegador, únicamente las secciones que tengas expandidas en ese momento — las colapsadas se excluyen automáticamente. Sin Markdown ni librerías externas. En navegadores integrados (LinkedIn, Instagram, Facebook) el diálogo de impresión suele estar bloqueado; ambos botones incluyen una nota sugiriendo abrir el enlace en Chrome o Safari si no responde.
 
 ## Stack técnico
 

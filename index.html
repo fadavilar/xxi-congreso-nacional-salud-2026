@@ -101,6 +101,16 @@
         <div class="stat-grid" id="stat-grid"></div>
       </section>
 
+      <section class="export-panel export-panel-top" aria-labelledby="export-panel-top-title">
+        <h2 id="export-panel-top-title">Exportar</h2>
+        <p class="export-panel-intro">¿Quieres guardar esta síntesis para leerla después? Expande las secciones que te interesen (o "Expandir todo" abajo) y usa este botón —o el que está al final de la página— para exportarlas a PDF.</p>
+        <button class="btn btn-primary js-export-pdf" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 19h14"/></svg>
+          Exportar a PDF (secciones visibles)
+        </button>
+        <p class="export-panel-hint">En algunos navegadores integrados (el de la app de LinkedIn, Instagram o Facebook, por ejemplo) el diálogo de impresión no se abre — si no pasa nada al tocar el botón, abre este enlace directamente en Chrome o Safari.</p>
+      </section>
+
       <div class="toolbar">
         <span class="hint" id="section-count-hint">6 secciones · el resumen está abierto, el resto se expande a tu ritmo</span>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -114,10 +124,11 @@
       <section class="export-panel" aria-labelledby="export-panel-title">
         <h2 id="export-panel-title">Exportar</h2>
         <p class="export-panel-intro">Exporta a PDF las secciones que tengas expandidas ahora mismo (las colapsadas no se incluyen). Usa "Expandir todo" arriba si quieres exportar el documento completo.</p>
-        <button class="btn btn-primary" id="export-pdf-btn" type="button">
+        <button class="btn btn-primary js-export-pdf" type="button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 19h14"/></svg>
           Exportar a PDF (secciones visibles)
         </button>
+        <p class="export-panel-hint">En algunos navegadores integrados (el de la app de LinkedIn, Instagram o Facebook, por ejemplo) el diálogo de impresión no se abre — si no pasa nada al tocar el botón, abre este enlace directamente en Chrome o Safari.</p>
       </section>
 
       <section class="sources-panel" id="sources-panel" aria-labelledby="sources-panel-title" hidden>

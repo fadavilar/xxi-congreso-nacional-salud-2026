@@ -747,13 +747,15 @@ body.focus-mode .container{ max-width: 720px; }
 .sources-panel-list a{ color: var(--primary-2); }
 
 /* ============================================================
-   Export panel (single control, end of content)
+   Export panel (repeated at the top and the end of the content)
    ============================================================ */
 .export-panel{
   margin-top: 24px; padding: 18px; background: var(--surface); border:1px solid var(--border); border-radius: var(--radius);
 }
+.export-panel-top{ margin-top: 20px; }
 .export-panel h2{ font-size:1rem; margin-bottom:6px; }
 .export-panel-intro{ color: var(--text-muted); font-size:.85rem; margin-bottom:12px; }
+.export-panel-hint{ color: var(--text-muted); font-size:.76rem; margin:10px 0 0; }
 
 /* ============================================================
    Accessible-list toggle for SVG diagrams

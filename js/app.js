@@ -1372,9 +1372,9 @@
      the @media print rule ".acc-item:not(.open){ display:none }".
      ============================================================ */
   function initGlobalExport(){
-    const btn = document.getElementById("export-pdf-btn");
-    if(!btn) return;
-    btn.addEventListener("click", ()=> window.print());
+    document.querySelectorAll(".js-export-pdf").forEach(btn=>{
+      btn.addEventListener("click", ()=> window.print());
+    });
   }
 
   /* ============================================================
