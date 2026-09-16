@@ -42,7 +42,7 @@ HTML/CSS/JS sin build step ni frameworks (fácil de servir con GitHub Pages), si
 - `js/data.js` — todo el contenido editorial (diagnóstico causal, ejes temáticos, cifras clave, agenda, recomendaciones, lagunas, nota técnica, lectura, metodología, fotos de ponentes, etiquetas de confiabilidad).
 - `js/app.js` — renderizado, tema claro/oscuro persistente, acordeones, diagramas SVG interactivos y accesibles, índice/scrollspy, buscador, atajos de teclado, exportación a PDF.
 - `img/speakers/` — retratos oficiales de funcionarios públicos (ver "Fotos de ponentes" abajo).
-- `downloads/nota-tecnica-ips-eps-plantilla.xlsx` — plantilla descargable en Excel: hoja "Guía" (referencia con la sesión del congreso de cada elemento), "Ingreso de valores" (los 8 elementos con un ejemplo prediligenciado, listo para reemplazar) y "Resumen" (costo total, margen y punto de equilibrio calculados por fórmula a partir de lo diligenciado).
+- `downloads/nota-tecnica-ips-eps-plantilla.xlsx` — plantilla descargable en Excel: hoja "Guía" (referencia normativa y de sesión del congreso de cada elemento), "Ingreso de valores" (los 8 elementos con un ejemplo prediligenciado, listo para reemplazar) y "Resumen" (costo total, costo medio por afiliado, margen y punto de equilibrio calculados por fórmula a partir de lo diligenciado). Las tres hojas están enlazadas por botones de navegación y protegidas (solo las celdas de ejemplo son editables); los campos con riesgo de mala interpretación llevan una nota emergente con la fuente, y los campos de opción fija usan listas desplegables.
 
 Para editar contenido, generalmente basta con modificar `js/data.js`; el resto se renderiza automáticamente.
 

@@ -863,6 +863,13 @@
 
     body.appendChild(el("h4",{id:"nota-tecnica-marco-resultados", style:"font-size:.86rem;margin-top:18px"},["5. Marco de resultados de implementación aplicable"]));
     body.appendChild(el("p",{style:"font-size:.85rem;color:var(--text-muted)"},[t.outcomesFramework.note]));
+    if(t.outcomesFramework.citation){
+      const cit = t.outcomesFramework.citation;
+      body.appendChild(el("p",{class:"indicator-source"},[
+        "Marco adaptado de ",
+        el("a",{href:cit.url, target:"_blank", rel:"noopener noreferrer"},[cit.label]),
+      ]));
+    }
     const outWrap = el("div",{class:"outcomes"});
     t.outcomesFramework.rows.forEach(o=>{
       outWrap.appendChild(el("div",{class:"outcome"},[
@@ -1334,6 +1341,8 @@
     if(DATA.meta.relatedWork) groups.push({ title:"Análisis relacionado del autor", items:[{ label: DATA.meta.relatedWork.title, url: DATA.meta.relatedWork.url }] });
     const notaTecnicaRefs = (DATA.technicalNote && DATA.technicalNote.regulatoryBasis && DATA.technicalNote.regulatoryBasis.sourceRefs) || [];
     if(notaTecnicaRefs.length) groups.push({ title:"Metodología oficial de la nota técnica", items: notaTecnicaRefs });
+    const outcomesCitation = DATA.technicalNote && DATA.technicalNote.outcomesFramework && DATA.technicalNote.outcomesFramework.citation;
+    if(outcomesCitation) groups.push({ title:"Referencia académica (marco de resultados de implementación)", items:[outcomesCitation] });
     if(!groups.length){
       body.appendChild(el("p",{style:"color:var(--text-muted);font-size:.85rem"},["No hay fuentes con URL pública verificable registradas."]));
       return;
